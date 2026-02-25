@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>America Tracking Polls | Demo Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* ATP Brand Colors */
+            --atp-navy: #0B1C33; 
+            --atp-red: #E60000;
+            --atp-white: #FFFFFF;
+            --atp-cream: #F9F9F7;
+            --text-main: #111111;
+            --text-muted: #555555;
+            --radius: 4px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--atp-cream);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Logo Construction */
+        .logo-container {
+            margin-bottom: 3rem;
+            transform: scale(1.2);
+        }
+
+        .atp-logo-svg {
+            width: 180px;
+            height: auto;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 4rem;
+            max-width: 700px;
+        }
+
+        h1 {
+            font-family: 'Merriweather', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+            color: var(--atp-navy);
+        }
+
+        .highlight-red {
+            color: var(--atp-red);
+            font-style: italic;
+        }
+
+        p.subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            width: 100%;
+        }
+
+        .card {
+            background: var(--atp-white);
+            border: 1px solid #e0e0e0;
+            border-top: 4px solid var(--atp-navy);
+            border-radius: var(--radius);
+            padding: 3rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-type {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--atp-red);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .card h2 {
+            font-family: 'Merriweather', serif;
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            color: var(--atp-navy);
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            flex-grow: 1;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-list li svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--atp-navy);
+        }
+
+        .btn-launch {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: transparent;
+            border: 2px solid var(--atp-navy);
+            color: var(--atp-navy);
+            padding: 0.75rem 1.5rem;
+            border-radius: 2px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .card:hover .btn-launch {
+            background: var(--atp-navy);
+            color: white;
+        }
+
+        footer {
+            margin-top: 5rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        .aeo-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--atp-cream);
+            color: var(--atp-navy);
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 2px;
+            border: 1px solid #ddd;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        /* Brand Card Custom Styles */
+        .brand-card {
+            background-color: var(--atp-navy);
+            border-color: rgba(230, 0, 0, 0.3);
+        }
+
+        .brand-card h2 {
+            color: var(--atp-white);
+        }
+
+        .brand-card p,
+        .brand-card .feature-list li {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .brand-card .feature-list li svg {
+            stroke: var(--atp-red);
+        }
+
+        .brand-card .card-type {
+            color: var(--atp-white);
+        }
+
+        .brand-card .btn-launch {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: transparent;
+            color: var(--atp-white);
+        }
+
+        .brand-card:hover .btn-launch {
+            background: var(--atp-red);
+            color: white;
+        }
+        
+        .font-brand {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <div class="logo-container">
+            <!-- ATP Logo SVG Recreation -->
+            <svg class="atp-logo-svg" viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg">
+                <!-- Stars -->
+                <path d="M30 70 L34 82 L22 74 L38 74 L26 82 Z" fill="white" transform="translate(0, -10)"/>
+                <path d="M75 55 L79 67 L67 59 L83 59 L71 67 Z" fill="white" transform="translate(0, -10)"/>
+                <path d="M120 40 L124 52 L112 44 L128 44 L116 52 Z" fill="white" transform="translate(0, -10)"/>
+                <path d="M165 25 L169 37 L157 29 L173 29 L161 37 Z" fill="white" transform="translate(0, -10)"/>
+
+                <!-- Bars -->
+                <rect x="20" y="75" width="30" height="50" fill="#E60000" />
+                <rect x="65" y="60" width="30" height="65" fill="#E60000" />
+                <rect x="110" y="45" width="30" height="80" fill="#E60000" />
+                <rect x="155" y="30" width="30" height="95" fill="#E60000" />
+
+                <!-- Text "ATP" -->
+                <!-- Positioning text to overlap the bars at the bottom with a slight offset -->
+                 <text x="100" y="155" class="font-brand" font-weight="900" font-size="70" fill="white" text-anchor="middle" letter-spacing="-2">ATP</text>
+            </svg>
+        </div>
+
+        <header>
+            <h1>7 Proven Strategies to <span class="highlight-red">Win Elections</span></h1>
+            <p class="subtitle">
+                Leverage Answer Engine Optimization (AEO), real-time polling data, and AI-driven campaign launchpads to dominate the digital narrative.
+            </p>
+        </header>
+
+        <div class="grid">
+            <!-- Campaign Site Card -->
+            <a href="campaign-site/index.html" class="card">
+                <div class="aeo-badge">AEO OPTIMIZED</div>
+                <div class="card-type">Campaign Solution</div>
+                <h2>Voter Insights Dashboard</h2>
+                <p>A data-first civic engagement platform designed for modern campaigns. Features real-time issue tracking, town hall integration, and comprehensive voter resource centers.</p>
+                <ul class="feature-list">
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Multi-channel Data Stream
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Civic Tool Integration
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Patriotic Design System
+                    </li>
+                </ul>
+                <div class="btn-launch">
+                    Launch Campaign Demo
+                </div>
+            </a>
+
+            <!-- Personal Site Card -->
+            <a href="personal-site/index.html" class="card">
+                <div class="aeo-badge">BRAND AUTHORITY</div>
+                <div class="card-type">Candidate Profile</div>
+                <h2>Digital Identity Platform</h2>
+                <p>Establish immediate authority with a professional digital footprint. Optimized for Answer Engines to ensure your tone of voice and core issues dominate search results.</p>
+                <ul class="feature-list">
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Bio & Narrative Optimization
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        High-Impact Visuals
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Direct Engagement Tools
+                    </li>
+                </ul>
+                <div class="btn-launch">
+                    Launch Candidate Demo
+                </div>
+            </a>
+
+            <!-- Brand Guide Card -->
+            <a href="brand-guide.html" class="card brand-card">
+                <div class="card-type">Design System</div>
+                <h2>ATP Brand Guide</h2>
+                <p>Explore the visual language, color palette, typography, and interactive component library that powers the ATP ecosystem.</p>
+                <ul class="feature-list">
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Interactive Components
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Logo & Asset Library
+                    </li>
+                </ul>
+                <div class="btn-launch">
+                    View Brand Guide
+                </div>
+            </a>
+        </div>
+
+        <footer>
+            &copy; 2026 America Tracking Polls. All Rights Reserved. <br>
+            Powered by AI Campaign Launchpad Technology.
+        </footer>
+    </div>
+</body>
+</html>

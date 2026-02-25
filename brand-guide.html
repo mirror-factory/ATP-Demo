@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATP | Official Brand Standards</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/brand.css">
+    
+    <!-- Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- Map Shapefile (TopoJSON) - We'll simulate or fetch -->
+    <script src="https://unpkg.com/topojson@3"></script>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="brand-mark">
+            <svg width="70" height="50" viewBox="0 0 200 160">
+                <!-- Stars (Navy) -->
+                <path d="M30 70 L34 82 L22 74 L38 74 L26 82 Z" fill="#0B1C33" transform="translate(0, -10)"/>
+                <path d="M75 55 L79 67 L67 59 L83 59 L71 67 Z" fill="#0B1C33" transform="translate(0, -10)"/>
+                <path d="M120 40 L124 52 L112 44 L128 44 L116 52 Z" fill="#0B1C33" transform="translate(0, -10)"/>
+                <path d="M165 25 L169 37 L157 29 L173 29 L161 37 Z" fill="#0B1C33" transform="translate(0, -10)"/>
+                
+                <!-- Bars (Red) -->
+                <rect x="20" y="75" width="30" height="50" fill="#E60000" />
+                <rect x="65" y="60" width="30" height="65" fill="#E60000" />
+                <rect x="110" y="45" width="30" height="80" fill="#E60000" />
+                <rect x="155" y="30" width="30" height="95" fill="#E60000" />
+                
+                <!-- Text (Navy) -->
+                <text x="100" y="155" font-family="'Merriweather', serif" font-weight="900" font-size="70" fill="#0B1C33" text-anchor="middle" letter-spacing="-2">ATP</text>
+            </svg>
+        </div>
+        <div class="nav-menu">
+            <a href="index.html">Hub</a>
+            <a href="#polling">Polling</a>
+            <a href="#issues">Key Issues</a>
+            <a href="#identity">Identity Standards</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="wrapper hero-content">
+            <span class="hero-label">The Gold Standard in Political Data</span>
+            <h1>AMERICA TRACKING POLLS</h1>
+            <p>
+                Precision. Integrity. Insight. <br>
+                Delivering the most accurate voter sentiment analysis for the modern era.
+            </p>
+            <div class="hero-actions">
+                <button class="btn-primary">View Latest Reports</button>
+                <button class="btn-secondary">Methodology</button>
+            </div>
+        </div>
+    </section>
+
+    <div class="wrapper">
+
+        <!-- Methodology Section -->
+        <div id="methodology" class="section-header">
+            <h2>Our Standards & Methodology</h2>
+            <p class="methodology-intro">
+                ATP employs a proprietary "Deep Listening" protocol that goes beyond traditional phone banking. 
+                We combine verified voter file data with real-time digital sentiment analysis to build a 360° view of the electorate.
+            </p>
+        </div>
+
+        <div class="bento-grid methodology-grid">
+            <div class="analytics-panel feature-box dark col-span-4">
+                <div class="methodology-step-number red">01.</div>
+                <h3 class="methodology-step-title">Sample Integrity</h3>
+                <p>We strictly filter for likely voters using a historic 3-cycle model, ensuring our data reflects the actual electorate, not just the general population.</p>
+            </div>
+            <div class="analytics-panel feature-box col-span-4">
+                <div class="methodology-step-number navy">02.</div>
+                <h3>Multi-Modal Intake</h3>
+                <p>Data is ingested from SMS, web panels, and secure app integration, removing the bias of landline-only polling methods.</p>
+            </div>
+            <div class="analytics-panel feature-box col-span-4">
+                <div class="methodology-step-number navy">03.</div>
+                <h3>Algorithmic Weighting</h3>
+                <p>Our AI-driven weighting engine adjusts for demographic shifts in real-time, correcting for under-sampled cohorts dynamically.</p>
+            </div>
+            
+            <!-- Additional Methodology Details -->
+            <div class="analytics-panel col-span-8">
+                <div class="panel-header">
+                    <span class="panel-title">Data Source Composition</span>
+                    <span class="panel-meta">Weighted Average</span>
+                </div>
+                <div class="panel-body">
+                    <div class="data-source-list">
+                        <div>
+                            <div class="data-source-item">
+                                <span>Live Landline & Mobile</span>
+                                <span>45%</span>
+                            </div>
+                            <div class="data-source-bar-bg">
+                                <div class="data-source-bar-fill" style="width: 45%; background: var(--atp-navy);"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="data-source-item">
+                                <span>Verified Text-to-Web (P2P SMS)</span>
+                                <span>35%</span>
+                            </div>
+                            <div class="data-source-bar-bg">
+                                <div class="data-source-bar-fill" style="width: 35%; background: var(--atp-red);"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="data-source-item">
+                                <span>Online Panels</span>
+                                <span>20%</span>
+                            </div>
+                            <div class="data-source-bar-bg">
+                                <div class="data-source-bar-fill" style="width: 20%; background: #555;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analytics-panel col-span-4" style="background: var(--atp-cream);">
+                <div class="panel-header">
+                    <span class="panel-title">Verification Protocol</span>
+                </div>
+                <div class="panel-body">
+                    <ul class="verification-list">
+                        <li class="verification-item">
+                            <span class="verification-icon">✓</span> Voter File Match
+                        </li>
+                        <li class="verification-item">
+                            <span class="verification-icon">✓</span> Geolocation Check
+                        </li>
+                        <li class="verification-item">
+                            <span class="verification-icon">✓</span> Bot Detection (reCAPTCHA v3)
+                        </li>
+                        <li class="verification-item">
+                            <span class="verification-icon">✓</span> Duplicate IP Scrubbing
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Polling & Analytics Center -->
+        <div id="polling" class="section-header">
+            <h2>National Polling Average</h2>
+            <div class="polling-header-meta">
+                 <span class="polling-header-date">Updated: Feb 14, 2026</span>
+                 <button class="btn-secondary polling-refresh-btn" onclick="window.updateCharts()">Refresh Data</button>
+            </div>
+        </div>
+
+        <div class="bento-grid">
+            <!-- Main Trend Chart -->
+            <div class="analytics-panel col-span-8">
+                <div class="panel-header">
+                    <span class="panel-title">Presidential Approval Trend</span>
+                    <span class="panel-meta">Aggregated National Data (N=15,000)</span>
+                </div>
+                <div class="panel-body">
+                    <div class="chart-container">
+                        <canvas id="chart-trend"></canvas>
+                    </div>
+                    <div class="fine-print">
+                        <strong>Source:</strong> National Monthly Tracking Poll • <strong>N=15,000</strong> Likely Voters • <strong>MoE:</strong> +/- 1.2%
+                    </div>
+                </div>
+            </div>
+
+            <!-- Demographics Breakdown -->
+            <div class="analytics-panel col-span-4">
+                <div class="panel-header">
+                    <span class="panel-title">Voter Demographics</span>
+                    <span class="panel-meta">By Age Group</span>
+                </div>
+                <div class="panel-body">
+                    <div class="demographics-chart-container">
+                        <canvas id="chart-demographics"></canvas>
+                    </div>
+                    <div class="fine-print">
+                        <strong>Source:</strong> Q1 Voter File Match • <strong>N=4,500</strong> LV
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Issue Sentiment (Bar Chart) -->
+            <div class="analytics-panel col-span-6">
+                <div class="panel-header">
+                    <span class="panel-title">Issue Priority Index</span>
+                    <span class="panel-meta">% of voters ranking as #1 issue</span>
+                </div>
+                <div class="panel-body">
+                    <!-- Custom HTML/CSS Animated Bars for "Sophisticated Animation" -->
+                    <div id="issue-bars">
+                        <!-- Injected by JS -->
+                    </div>
+                    <div class="fine-print">
+                        <strong>Source:</strong> Issue Landscape Survey • <strong>N=2,200</strong> RV • <strong>MoE:</strong> +/- 2.5%
+                    </div>
+                </div>
+            </div>
+
+            <!-- Electoral Map Preview -->
+            <div class="analytics-panel col-span-6">
+                 <div class="panel-header">
+                    <span class="panel-title">Electoral Projection</span>
+                    <span class="panel-meta">270 to Win</span>
+                </div>
+                <div class="panel-body">
+                    <div id="us-map-container" class="map-container">
+                        <!-- D3 Map will go here -->
+                    </div>
+                    <div class="fine-print">
+                        <strong>Source:</strong> Aggregate State Polling Model • Updated Daily
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Issues Visualization -->
+        <div id="issues" class="section-header">
+            <h2>The American Pulse</h2>
+            <p class="section-desc">Interactive visualization of the topics driving the national conversation. Bubbles are sized by engagement volume.</p>
+        </div>
+
+        <div class="analytics-panel pulse-panel">
+             <div class="panel-header">
+                 <span class="panel-title">Topic Engagement Volume</span>
+                 <span class="panel-meta">Real-time Discussion Velocity</span>
+             </div>
+             <div class="panel-body pulse-body">
+                 <div id="issues-bubble-chart" class="pulse-chart"></div>
+                 <div class="pulse-overlay">
+                     <div class="pulse-overlay-title" id="issue-highlight">Economy</div>
+                     <div class="pulse-overlay-stat" id="issue-stat">42% Importance</div>
+                     <div class="pulse-overlay-trend">Trending Up (+2.4%)</div>
+                 </div>
+                 <div class="pulse-fine-print">
+                    <strong>Source:</strong> Cross-Platform Social Sentiment Analysis (Twitter, Reddit, FB) • <strong>N=850,000+</strong> Interactions • <strong>Period:</strong> Last 7 Days
+                 </div>
+             </div>
+        </div>
+
+        <!-- Interactive Engagement Section -->
+        <div id="engagement" class="section-header">
+            <h2>Voter Sentiment Analysis</h2>
+            <p class="section-desc">Live interactive tools for gauging alignment and issue intensity.</p>
+        </div>
+
+        <div class="bento-grid">
+            <!-- Row 1: Legacy Tools -->
+            <!-- Alignment Quiz -->
+            <div class="col-span-6">
+                <div class="analytics-panel h-full">
+                    <div class="panel-header">
+                        <span class="panel-title">Voter Alignment Quiz</span>
+                        <span class="panel-meta">Standard UI</span>
+                    </div>
+                    <div class="panel-body">
+                        <div id="voter-quiz">
+                            <!-- Injected by JS -->
+                        </div>
+                        <div class="fine-print">
+                            <strong>Source:</strong> District 12 Values Survey • <strong>N=1,200</strong> Registered Voters • <strong>MoE:</strong> +/- 2.8%
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Intensity Grid -->
+            <div class="col-span-6">
+                <div class="analytics-panel h-full">
+                    <div class="panel-header">
+                        <span class="panel-title">Issue Intensity Heatmap</span>
+                        <span class="panel-meta">Severity Index (0-100)</span>
+                    </div>
+                    <div class="panel-body">
+                        <div id="intensity-grid">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 2: New Sleek Tool -->
+            <!-- Sleek Quiz Variant -->
+            <div class="col-span-12">
+                <div class="analytics-panel h-full">
+                    <div class="panel-header">
+                        <span class="panel-title">Voter Archetype Spectrum</span>
+                        <span class="panel-meta">Interactive Slider Interface</span>
+                    </div>
+                    <div class="panel-body">
+                        <div id="sleek-quiz">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demographic Momentum -->
+        <div id="momentum" class="section-header">
+            <h2>Demographic Momentum</h2>
+            <p class="section-desc">Tracking the velocity of voter shifts across key segments over the last quarter.</p>
+        </div>
+
+        <div class="analytics-panel">
+            <div class="panel-header">
+                <span class="panel-title">Segment Velocity Analysis</span>
+                <span class="panel-meta">Q4-Q1 Shift</span>
+            </div>
+            <div class="panel-body">
+                <div class="chart-container h-400">
+                    <canvas id="chart-velocity"></canvas>
+                </div>
+                <div class="fine-print">
+                    <strong>Source:</strong> Quarterly Voter File Analysis • <strong>Period:</strong> Q4 2025 - Q1 2026 • <strong>Sample:</strong> 12,500 Registered Voters
+                </div>
+            </div>
+        </div>
+
+        <!-- Rapid Polling Insights (Pixel Grid) -->
+        <div id="rapid-polling" class="section-header">
+            <h2>Rapid Polling Insights</h2>
+            <p class="section-desc">Visualizing high-intensity sentiment with granular population samples.</p>
+        </div>
+
+        <div class="pixel-grid-container">
+            <!-- Card 1: Education (From Image) -->
+            <div class="pixel-card red">
+                <div class="panel-header">
+                    <div class="pixel-title">
+                        <span>Education</span>
+                        <h4>Tech in Schools</h4>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="pixel-canvas" data-percent="91"></div>
+                    <div class="pixel-stat">91%</div>
+                    <p class="pixel-text">Agree computer literacy is essential.</p>
+                    <div class="fine-print">
+                        <strong>Source:</strong> North Hills Parent Union Feedback<br>
+                        <strong>Date:</strong> Feb 05, 2026 • <strong>N=189</strong> Parents<br>
+                        <strong>MoE:</strong> +/- 4.8% • <strong>Method:</strong> Email Panel
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Infrastructure (From Image) -->
+            <div class="pixel-card blue">
+                <div class="panel-header">
+                    <div class="pixel-title">
+                        <span>Infrastructure</span>
+                        <h4>Westside Transit Exp.</h4>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="pixel-canvas" data-percent="52"></div>
+                    <div class="pixel-stat">52%</div>
+                    <p class="pixel-text">Approve of current expansion plans.</p>
+                    <div class="fine-print">
+                        <strong>Source:</strong> Westside Commuter Tracking Poll<br>
+                        <strong>Date:</strong> Feb 14, 2026 • <strong>N=450</strong> Daily Commuters<br>
+                        <strong>MoE:</strong> +/- 3.5% • <strong>Method:</strong> Intercept App
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Economic (Placeholder/Context) -->
+            <div class="pixel-card red">
+                <div class="panel-header">
+                    <div class="pixel-title">
+                        <span>Economic Policy</span>
+                        <h4>Small Business Relief</h4>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="pixel-canvas" data-percent="84"></div>
+                    <div class="pixel-stat">84%</div>
+                    <p class="pixel-text">Support passing the new relief bill.</p>
+                    <div class="fine-print">
+                        <strong>Source:</strong> District 12 Business Pulse<br>
+                        <strong>Date:</strong> Feb 10-12, 2026 • <strong>N=342</strong> Owners<br>
+                        <strong>MoE:</strong> +/- 4.1% • <strong>Method:</strong> SMS-to-Web
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 4: Public Safety (Placeholder/Context) -->
+            <div class="pixel-card blue">
+                <div class="panel-header">
+                    <div class="pixel-title">
+                        <span>Public Safety</span>
+                        <h4>Community Policing</h4>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="pixel-canvas" data-percent="68"></div>
+                    <div class="pixel-stat">68%</div>
+                    <p class="pixel-text">Favor increased foot patrols downtown.</p>
+                    <div class="fine-print">
+                        <strong>Source:</strong> Downtown Residents Assoc.<br>
+                        <strong>Date:</strong> Jan 28, 2026 • <strong>N=215</strong> Voters<br>
+                        <strong>MoE:</strong> +/- 5.2% • <strong>Method:</strong> Live Mobile
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Digital Outreach Standards -->
+        <div id="outreach" class="section-header">
+            <h2>Digital Outreach Protocols</h2>
+            <p class="section-desc">Standardized formats for SMS, Email, and Paid Media to ensure tone consistency and AEO optimization.</p>
+        </div>
+
+        <div class="outreach-grid">
+            <!-- SMS Protocol -->
+            <div class="protocol-card">
+                <div class="panel-header">
+                    <span class="panel-title">P2P SMS Standards</span>
+                </div>
+                <div class="panel-body">
+                    <span class="protocol-tag">Frequency: Max 2/Week</span>
+                    <span class="protocol-tag">Tone: Urgent / Personal</span>
+                    <div class="outreach-example">
+                        <p class="outreach-label"><strong>Sample Script:</strong></p>
+                        <p style="font-style: italic; color: var(--atp-navy);">"Hi [Name], it's Sarah. The vote on [Issue] is tomorrow. Can I count on you to stand with us? Reply YES to confirm."</p>
+                        <div style="margin-top: 1rem; font-size: 0.8rem; color: var(--atp-red);">
+                            <strong>✖ Do Not:</strong> Use all caps, excessive emojis, or vague links.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email Protocol -->
+            <div class="protocol-card">
+                <div class="panel-header">
+                    <span class="panel-title">Email & Newsletter</span>
+                </div>
+                <div class="panel-body">
+                    <span class="protocol-tag">Header: Merriweather</span>
+                    <span class="protocol-tag">CTA: ATP Red Button</span>
+                    <div style="background: white; padding: 1.5rem; border-radius: 4px; margin-top: 1rem; border: 1px solid var(--atp-grey); font-family: 'Inter', sans-serif;">
+                        <p style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-secondary);"><strong>Key Requirements:</strong></p>
+                        <ul style="list-style: disc; padding-left: 1.2rem; font-size: 0.9rem; color: var(--text-secondary);">
+                            <li>Subject lines must be under 40 chars.</li>
+                            <li>"Bottom Line Up Front" (BLUF) structure.</li>
+                            <li>Include at least one localized data point.</li>
+                            <li>Footer must contain full disclosure & unsubscribe.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Official Email Templates -->
+        <div id="email-templates" class="section-header">
+            <h2>Official Email Templates</h2>
+            <p style="color: var(--text-light);">Standardized layouts for constituent communication, optimized for readability and conversion.</p>
+        </div>
+
+        <!-- Email Tabs -->
+        <div class="email-tabs">
+            <button class="email-tab-btn active" onclick="switchEmailTab(0)">Newsletter</button>
+            <button class="email-tab-btn" onclick="switchEmailTab(1)">Action Alert</button>
+            <button class="email-tab-btn" onclick="switchEmailTab(2)">Event Invite</button>
+        </div>
+
+        <div class="email-preview-container">
+            <!-- Template 1: Newsletter -->
+            <div class="email-card active" id="email-template-0">
+                <div class="email-meta">
+                    <div><strong>From:</strong> Sarah Chen &lt;sarah@atp-district12.com&gt;</div>
+                    <div><strong>Subject:</strong> The numbers are in (and they look good)</div>
+                </div>
+                <div class="email-header-logo blue-header">
+                    <svg width="120" height="50" viewBox="0 0 200 160">
+                        <!-- Stars (White) -->
+                        <path d="M30 70 L34 82 L22 74 L38 74 L26 82 Z" fill="#FFFFFF" transform="translate(0, -10)"/>
+                        <path d="M75 55 L79 67 L67 59 L83 59 L71 67 Z" fill="#FFFFFF" transform="translate(0, -10)"/>
+                        <path d="M120 40 L124 52 L112 44 L128 44 L116 52 Z" fill="#FFFFFF" transform="translate(0, -10)"/>
+                        <path d="M165 25 L169 37 L157 29 L173 29 L161 37 Z" fill="#FFFFFF" transform="translate(0, -10)"/>
+                        
+                        <!-- Bars (Red) -->
+                        <rect x="20" y="75" width="30" height="50" fill="#E60000" />
+                        <rect x="65" y="60" width="30" height="65" fill="#E60000" />
+                        <rect x="110" y="45" width="30" height="80" fill="#E60000" />
+                        <rect x="155" y="30" width="30" height="95" fill="#E60000" />
+                        
+                        <!-- Text (White) -->
+                        <text x="100" y="155" font-family="'Merriweather', serif" font-weight="900" font-size="70" fill="#FFFFFF" text-anchor="middle" letter-spacing="-2">ATP</text>
+                    </svg>
+                    <h1>The Weekly Brief: Q1 Recap</h1>
+                </div>
+                <div class="email-content">
+                    <p>Friend,</p>
+                    <p>This week, we released our first quarterly impact report, and the data confirms what we've been hearing on the ground: <strong>District 12 is ready for change.</strong></p>
+                    <div class="email-image-placeholder" style="background-image: url('https://images.unsplash.com/photo-1575320181282-9afab399332c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80');"></div>
+                    <p>Our latest poll shows a <strong>12% surge</strong> in support for the new transit initiative. This isn't just about numbers; it's about the families in North Hills who will save 30 minutes on their daily commute.</p>
+                    <p>We've held 15 town halls, knocked on 4,000 doors, and sent over 10,000 text messages. The momentum is undeniable, but we can't slow down now. The opposition is ramping up their ad spend, and we need to match their reach.</p>
+                    <a href="#" class="email-cta">Read the Full Report</a>
+                    <p>Thank you for standing with us.</p>
+                    <p><em>- The ATP Team</em></p>
+                </div>
+                <div class="email-footer">
+                    <p>Paid for by America Tracking Polls<br>
+                    123 Civic Blvd, District 12, USA</p>
+                    <a href="#">Unsubscribe</a>
+                </div>
+            </div>
+
+            <!-- Template 2: Action Alert -->
+            <div class="email-card" id="email-template-1">
+                <div class="email-meta">
+                    <div><strong>From:</strong> ATP Action Alert &lt;alerts@atp-district12.com&gt;</div>
+                    <div><strong>Subject:</strong> ⚠️ 48 hours to make a difference</div>
+                </div>
+                <div class="email-header-logo blue-header">
+                    <svg width="120" height="50" viewBox="0 0 200 160">
+                        <path d="M30 70 L34 82 L22 74 L38 74 L26 82 Z" fill="#FFFFFF" transform="translate(0, -10)"/>
+                        <path d="M75 55 L79 67 L67 59 L83 59 L71 67 Z" fill="#FFFFFF" transform="translate(0, -10)"/>
+                        <path d="M120 40 L124 52 L112 44 L128 44 L116 52 Z" fill="#FFFFFF" transform="translate(0, -10)"/>
+                        <path d="M165 25 L169 37 L157 29 L173 29 L161 37 Z" fill="#FFFFFF" transform="translate(0, -10)"/>
+                        <rect x="20" y="75" width="30" height="50" fill="#E60000" />
+                        <rect x="65" y="60" width="30" height="65" fill="#E60000" />
+                        <rect x="110" y="45" width="30" height="80" fill="#E60000" />
+                        <rect x="155" y="30" width="30" height="95" fill="#E60000" />
+                        <text x="100" y="155" font-family="'Merriweather', serif" font-weight="900" font-size="70" fill="#FFFFFF" text-anchor="middle" letter-spacing="-2">ATP</text>
+                    </svg>
+                    <h1>We need your input.</h1>
+                </div>
+                <div class="email-content">
+                    <p>Sarah,</p>
+                    <p>The City Council votes on the zoning amendment in exactly 48 hours. Our models show the vote is currently deadlocked. This amendment is crucial for protecting our green spaces while allowing for sustainable growth.</p>
+                    <div class="email-image-placeholder" style="background-image: url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80');"></div>
+                    <p>We need <strong>500 more signatures</strong> to tip the scales. If we can show the Council that the community is united behind this, they will have no choice but to listen. Your voice is the deciding factor.</p>
+                    <a href="#" class="email-cta secondary">Sign the Petition</a>
+                    <p>Don't let this opportunity slip away.</p>
+                </div>
+                <div class="email-footer">
+                    <p>Paid for by America Tracking Polls<br>
+                    123 Civic Blvd, District 12, USA</p>
+                    <a href="#">Unsubscribe</a>
+                </div>
+            </div>
+
+            <!-- Template 3: Event Invite -->
+            <div class="email-card" id="email-template-2">
+                <div class="email-meta">
+                    <div><strong>From:</strong> ATP Events &lt;events@atp-district12.com&gt;</div>
+                    <div><strong>Subject:</strong> You're invited: Virtual Town Hall</div>
+                </div>
+                <div class="email-header-logo blue-header">
+                    <svg width="120" height="50" viewBox="0 0 200 160">
+                        <path d="M30 70 L34 82 L22 74 L38 74 L26 82 Z" fill="#FFFFFF" transform="translate(0, -10)"/>
+                        <path d="M75 55 L79 67 L67 59 L83 59 L71 67 Z" fill="#FFFFFF" transform="translate(0, -10)"/>
+                        <path d="M120 40 L124 52 L112 44 L128 44 L116 52 Z" fill="#FFFFFF" transform="translate(0, -10)"/>
+                        <path d="M165 25 L169 37 L157 29 L173 29 L161 37 Z" fill="#FFFFFF" transform="translate(0, -10)"/>
+                        <rect x="20" y="75" width="30" height="50" fill="#E60000" />
+                        <rect x="65" y="60" width="30" height="65" fill="#E60000" />
+                        <rect x="110" y="45" width="30" height="80" fill="#E60000" />
+                        <rect x="155" y="30" width="30" height="95" fill="#E60000" />
+                        <text x="100" y="155" font-family="'Merriweather', serif" font-weight="900" font-size="70" fill="#FFFFFF" text-anchor="middle" letter-spacing="-2">ATP</text>
+                    </svg>
+                    <h1>Virtual Town Hall</h1>
+                </div>
+                <div class="email-content">
+                    <p>Friend,</p>
+                    <p>The best solutions come from listening. That's why we're hosting a live Q&A session this Thursday to discuss the new Infrastructure Bill. We want to hear your thoughts, your concerns, and your ideas.</p>
+                    <div class="email-image-placeholder" style="background-image: url('https://images.unsplash.com/photo-1551836022-d5d88e9218df?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80');"></div>
+                    <div class="email-event-details">
+                        <strong>Date:</strong> Thursday, Oct 24<br>
+                        <strong>Time:</strong> 6:00 PM EST<br>
+                        <strong>Topic:</strong> Infrastructure & Jobs
+                    </div>
+                    <a href="#" class="email-cta">RSVP Now</a>
+                    <p>Spots are limited. Reserve yours today.</p>
+                </div>
+                <div class="email-footer">
+                    <p>Paid for by America Tracking Polls<br>
+                    123 Civic Blvd, District 12, USA</p>
+                    <a href="#">Unsubscribe</a>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function switchEmailTab(index) {
+                // Update Buttons
+                document.querySelectorAll('.email-tab-btn').forEach((btn, i) => {
+                    if (i === index) btn.classList.add('active');
+                    else btn.classList.remove('active');
+                });
+                
+                // Update Cards
+                document.querySelectorAll('.email-card').forEach((card, i) => {
+                    if (i === index) {
+                        card.style.display = 'flex';
+                        // Trigger simple fade in
+                        card.style.opacity = '0';
+                        setTimeout(() => card.style.opacity = '1', 50);
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+        </script>!-- Email Tech Specs -->
+        <div id="email-tech-specs" class="section-header">
+            <h2>Email Technical Specifications</h2>
+            <p style="color: var(--text-light);">Guidelines for building and sending emails that meet our brand and accessibility standards.</p>
+        </div>
+
+        <div class="analytics-panel col-span-12">
+            <div class="panel-header">
+                <span class="panel-title">Email Structure & Content</span>
+            </div>
+            <div class="panel-body">
+                <div class="specs-grid">
+                    <div>
+                        <h4 class="specs-header">HTML Structure</h4>
+                        <ul class="specs-list">
+                            <li>Max width: 600px centered.</li>
+                            <li>Table-based layout for Outlook compatibility.</li>
+                            <li>Inline CSS only (no external stylesheets).</li>
+                            <li>Standard system fonts fallback stack.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="specs-header">Image Handling</h4>
+                        <ul class="specs-list">
+                            <li>All images must have alt text.</li>
+                            <li>Logos: 2x resolution (Retina ready).</li>
+                            <li>Hero images: Max file size 150KB.</li>
+                            <li>Block images: display: block; border: 0;</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="specs-header">Accessibility & Dark Mode</h4>
+                        <ul class="specs-list">
+                            <li>Contrast ratio 4.5:1 minimum.</li>
+                            <li>Dark mode: Transparent PNGs required.</li>
+                            <li>Font size: Min 16px body, 24px headers.</li>
+                            <li>Tap targets: Min 44x44px.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Digital Outreach Standards -->
+        <div id="outreach" class="section-header">
+            <h2>Digital Outreach Protocols</h2>
+            <p style="color: var(--text-light);">Standardized formats for SMS, Email, and Paid Media to ensure tone consistency and AEO optimization.</p>
+        </div>
+
+        <div class="outreach-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin-bottom: 4rem;">
+            <!-- SMS Protocol -->
+            <div class="protocol-card">
+                <div class="panel-header">
+                    <span class="panel-title">P2P SMS Standards</span>
+                </div>
+                <div class="panel-body">
+                    <span class="protocol-tag">Frequency: Max 2/Week</span>
+                    <span class="protocol-tag">Tone: Urgent / Personal</span>
+                    <div style="background: white; padding: 1.5rem; border-radius: 4px; margin-top: 1rem; border: 1px solid var(--atp-grey); font-family: 'Inter', sans-serif;">
+                        <p style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-secondary);"><strong>Sample Script:</strong></p>
+                        <p style="font-style: italic; color: var(--atp-navy);">"Hi [Name], it's Sarah. The vote on [Issue] is tomorrow. Can I count on you to stand with us? Reply YES to confirm."</p>
+                        <div style="margin-top: 1rem; font-size: 0.8rem; color: var(--atp-red);">
+                            <strong>✖ Do Not:</strong> Use all caps, excessive emojis, or vague links.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email Protocol -->
+            <div class="protocol-card">
+                <div class="panel-header">
+                    <span class="panel-title">Email & Newsletter</span>
+                </div>
+                <div class="panel-body">
+                    <span class="protocol-tag">Header: Merriweather</span>
+                    <span class="protocol-tag">CTA: ATP Red Button</span>
+                    <div style="background: white; padding: 1.5rem; border-radius: 4px; margin-top: 1rem; border: 1px solid var(--atp-grey); font-family: 'Inter', sans-serif;">
+                        <p style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-secondary);"><strong>Key Requirements:</strong></p>
+                        <ul style="list-style: disc; padding-left: 1.2rem; font-size: 0.9rem; color: var(--text-secondary);">
+                            <li>Subject lines must be under 40 chars.</li>
+                            <li>"Bottom Line Up Front" (BLUF) structure.</li>
+                            <li>Include at least one localized data point.</li>
+                            <li>Footer must contain full disclosure & unsubscribe.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tone of Voice -->
+        <div id="tone" class="section-header">
+            <h2>Tone of Voice & Messaging</h2>
+            <p class="section-desc">Our voice is authoritative, data-backed, and patriotic, but never alarmist.</p>
+        </div>
+        <div class="bento-grid">
+            <div class="analytics-panel col-span-6">
+                <div class="panel-header">
+                    <span class="panel-title">The Navigator</span>
+                </div>
+                <div class="panel-body">
+                    <p class="tone-body-p">We guide voters through noise with clarity and precision.</p>
+                    <div class="tone-example">
+                        <strong class="tone-do">✓ Do:</strong> "Data indicates a shift in sentiment..."<br>
+                        <strong class="tone-dont">✖ Don't:</strong> "You won't believe what happened..."
+                    </div>
+                </div>
+            </div>
+            <div class="analytics-panel col-span-6">
+                <div class="panel-header">
+                    <span class="panel-title">The Neighbor</span>
+                </div>
+                <div class="panel-body">
+                    <p class="tone-body-p">We are rooted in the community, not just observing it.</p>
+                    <div class="tone-example">
+                        <strong class="tone-do">✓ Do:</strong> "Families in North Hills are concerned..."<br>
+                        <strong class="tone-dont">✖ Don't:</strong> "The voters in District 12..."
+                    </div>
+                </div>
+            </div>
+            <div class="analytics-panel col-span-6">
+                <div class="panel-header">
+                    <span class="panel-title">The Architect</span>
+                </div>
+                <div class="panel-body">
+                    <p class="tone-body-p">We focus on solutions and structural improvements.</p>
+                    <div class="tone-example">
+                        <strong class="tone-do">✓ Do:</strong> "This policy reduces congestion by 15%..."<br>
+                        <strong class="tone-dont">✖ Don't:</strong> "This is a disaster waiting to happen."
+                    </div>
+                </div>
+            </div>
+            <div class="analytics-panel col-span-6">
+                <div class="panel-header">
+                    <span class="panel-title">The Scientist</span>
+                </div>
+                <div class="panel-body">
+                    <p class="tone-body-p">We validate every claim with rigorous sourcing.</p>
+                    <div class="tone-example">
+                        <strong class="tone-do">✓ Do:</strong> "According to our Q1 tracking poll (N=500)..."<br>
+                        <strong class="tone-dont">✖ Don't:</strong> "Everyone knows that support is rising."
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Identity Standards -->
+        <div id="identity" class="section-header">
+            <h2>Identity Standards</h2>
+        </div>
+
+        <div class="bento-grid">
+            <!-- Logo Usage -->
+            <div class="analytics-panel col-span-12">
+                <div class="panel-header"><span class="panel-title">Primary Mark</span></div>
+                <div class="panel-body">
+                    <div class="logo-display">
+                        <svg width="300" height="240" viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Stars -->
+                            <path d="M30 70 L34 82 L22 74 L38 74 L26 82 Z" fill="#0B1C33" transform="translate(0, -10)"/>
+                            <path d="M75 55 L79 67 L67 59 L83 59 L71 67 Z" fill="#0B1C33" transform="translate(0, -10)"/>
+                            <path d="M120 40 L124 52 L112 44 L128 44 L116 52 Z" fill="#0B1C33" transform="translate(0, -10)"/>
+                            <path d="M165 25 L169 37 L157 29 L173 29 L161 37 Z" fill="#0B1C33" transform="translate(0, -10)"/>
+
+                            <!-- Bars -->
+                            <rect x="20" y="75" width="30" height="50" fill="#E60000" />
+                            <rect x="65" y="60" width="30" height="65" fill="#E60000" />
+                            <rect x="110" y="45" width="30" height="80" fill="#E60000" />
+                            <rect x="155" y="30" width="30" height="95" fill="#E60000" />
+                            
+                            <!-- Text -->
+                            <text x="100" y="155" font-family="'Merriweather', serif" font-weight="900" font-size="70" fill="#0B1C33" text-anchor="middle" letter-spacing="-2">ATP</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Colors -->
+            <div class="analytics-panel col-span-6">
+                <div class="panel-header"><span class="panel-title">Official Palette</span></div>
+                <div class="panel-body">
+                    <div class="palette-grid">
+                        <div class="palette-item">
+                            <div class="palette-swatch" style="background: var(--atp-navy);"></div>
+                            <strong class="palette-name">ATP Navy</strong>
+                            <span class="palette-hex">#0B1C33</span>
+                        </div>
+                        <div class="palette-item">
+                            <div class="palette-swatch" style="background: var(--atp-red);"></div>
+                            <strong class="palette-name red">ATP Red</strong>
+                            <span class="palette-hex">#E60000</span>
+                        </div>
+                        <div class="palette-item">
+                            <div class="palette-swatch bordered" style="background: var(--atp-cream);"></div>
+                            <strong class="palette-name">Editorial Cream</strong>
+                            <span class="palette-hex">#F9F9F7</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Typography & Components -->
+            <div class="analytics-panel col-span-6">
+                <div class="panel-header"><span class="panel-title">Typography Scale</span></div>
+                <div class="panel-body">
+                    <div>
+                        <h1 class="typography-h1">H1. Merriweather 2.5rem</h1>
+                        <h2 class="typography-h2">H2. Merriweather 2rem</h2>
+                        <h3 class="typography-h3">H3. Merriweather 1.75rem</h3>
+                        <p class="typography-body"><strong>Body (Inter):</strong> Political communication requires high readability. Use Inter for all body copy, data labels, and UI elements. Standard size is 1rem (16px) with 1.6 line-height.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- UI Components -->
+            <div class="analytics-panel col-span-12">
+                <div class="panel-header"><span class="panel-title">UI Components & Interaction</span></div>
+                <div class="panel-body">
+                    <div class="ui-grid">
+                        <div>
+                            <h4 class="ui-header">Primary Actions</h4>
+                            <button class="btn-primary ui-btn-full">Primary Button</button>
+                            <button class="btn-primary ui-btn-full" style="background: #b30000;">Hover State</button>
+                        </div>
+                        <div>
+                            <h4 class="ui-header">Secondary Actions</h4>
+                            <button class="btn-secondary ui-btn-full">Secondary Button</button>
+                            <button class="btn-secondary ui-btn-full" style="background: var(--atp-navy); color: white;">Hover State</button>
+                        </div>
+                        <div>
+                            <h4 class="ui-header">Form Elements</h4>
+                            <input type="text" placeholder="Email Address..." class="ui-input">
+                            <div class="ui-error">* Error state validation message</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer-main">
+            <div class="brand-mark footer-brand">
+                <span>ATP</span> ANALYTICS
+            </div>
+            &copy; 2026 America Tracking Polls. All Rights Reserved.
+        </footer>
+
+    </div>
+
+    <!-- Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <!-- Init Scripts -->
+    <script src="js/brand-charts.js"></script>
+    <script src="js/brand-issues.js"></script>
+    <script src="js/brand-map.js"></script>
+    <script src="js/brand-quiz.js"></script>
+    <script src="js/brand-pixels.js"></script>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Hero Animation
+            const heroTl = gsap.timeline();
+            heroTl.from('.hero-label', { y: 20, opacity: 0, duration: 0.6, ease: 'power2.out' })
+                  .from('.hero h1', { y: 30, opacity: 0, duration: 0.8, ease: 'power2.out' }, '-=0.4')
+                  .from('.hero p', { y: 20, opacity: 0, duration: 0.8, ease: 'power2.out' }, '-=0.6')
+                  .from('.hero button', { y: 20, opacity: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out' }, '-=0.4');
+
+            // Section Headers
+            gsap.utils.toArray('.section-header').forEach(header => {
+                gsap.from(header, {
+                    scrollTrigger: {
+                        trigger: header,
+                        start: 'top 85%',
+                        toggleActions: 'play none none reverse'
+                    },
+                    y: 30,
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: 'power2.out'
+                });
+            });
+
+            // Bento Grid Panels
+            gsap.utils.toArray('.analytics-panel').forEach((panel, i) => {
+                gsap.from(panel, {
+                    scrollTrigger: {
+                        trigger: panel,
+                        start: 'top 90%',
+                    },
+                    y: 40,
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: 'power2.out'
+                });
+            });
+
+            // Protocol Cards
+            gsap.utils.toArray('.protocol-card').forEach((card, i) => {
+                gsap.from(card, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 85%'
+                    },
+                    x: -30,
+                    opacity: 0,
+                    duration: 0.6,
+                    delay: i * 0.1,
+                    ease: 'power2.out'
+                });
+            });
+
+            // Email Cards
+            gsap.utils.toArray('.email-card').forEach((card, i) => {
+                gsap.from(card, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 85%'
+                    },
+                    y: 50,
+                    opacity: 0,
+                    duration: 0.8,
+                    delay: i * 0.15,
+                    ease: 'power2.out'
+                });
+            });
+
+            // Pixel Stats Animation
+            gsap.utils.toArray('.pixel-stat').forEach(stat => {
+                const value = parseInt(stat.innerText);
+                ScrollTrigger.create({
+                    trigger: stat,
+                    start: 'top 85%',
+                    once: true,
+                    onEnter: () => {
+                        gsap.fromTo(stat, 
+                            { innerText: 0 },
+                            { 
+                                innerText: value, 
+                                duration: 2, 
+                                snap: { innerText: 1 },
+                                onUpdate: function() {
+                                    stat.innerText = Math.ceil(this.targets()[0].innerText) + '%';
+                                },
+                                ease: 'power3.out'
+                            }
+                        );
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
