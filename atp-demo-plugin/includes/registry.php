@@ -196,8 +196,8 @@ body{font-family:var(--body);color:var(--white);background:var(--blue-dark);over
 .pb-text strong{color:var(--white)}
 
 /* ═══ HEADER ═══ */
-.hdr{position:fixed;top:36px;left:0;right:0;z-index:500;height:60px;display:flex;align-items:center;transition:all 0.4s}
-.hdr.scrolled{top:0;background:rgba(17,16,48,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.04)}
+.hdr{position:fixed;top:36px;left:0;right:0;z-index:500;height:60px;display:flex;align-items:center;transition:all 0.4s;background:rgba(17,16,48,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.hdr.scrolled{top:0;background:rgba(17,16,48,0.97);border-bottom:1px solid rgba(255,255,255,0.04)}
 .hdr .wrap{display:flex;align-items:center;justify-content:space-between;width:100%}
 .hdr-left{display:flex;align-items:center;gap:14px}
 .hdr-mark{width:34px;height:30px;display:flex;align-items:center;justify-content:center}
@@ -223,7 +223,7 @@ body{font-family:var(--body);color:var(--white);background:var(--blue-dark);over
 .hero-text{position:relative}
 .h-tag{font-family:var(--mono);color:rgba(255,255,255,0.7);font-size:12px;letter-spacing:2px;margin-bottom:16px;display:inline-block;background:rgba(255,255,255,0.08);padding:4px 12px;border-radius:20px;border:1px solid rgba(255,255,255,0.12)}
 .h-line{font-family:var(--display);letter-spacing:3px;line-height:1.1;opacity:0;transform:translateY(30px)}
-.h-big{font-size:clamp(48px,6vw,72px);color:var(--white);text-shadow:0 2px 30px rgba(0,0,0,0.5)}
+.h-big{font-size:clamp(36px,4.5vw,56px);color:var(--white);text-shadow:0 2px 30px rgba(0,0,0,0.5)}
 .h-red{color:var(--red)}
 .hero-sub{margin-top:24px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.7);max-width:540px;opacity:0;transform:translateY(20px)}
 .hero-sub strong{color:var(--white);font-weight:700}
@@ -234,7 +234,7 @@ body{font-family:var(--body);color:var(--white);background:var(--blue-dark);over
 .btn-video:hover{background:rgba(255,255,255,0.2);transform:translateY(-2px)}
 .btn-video svg{width:18px;height:18px;fill:var(--white)}
 /* Hero Form */
-.hf{background:rgba(17,16,48,0.82);border:1px solid rgba(255,255,255,0.15);border-top:4px solid var(--red);border-radius:14px;padding:32px;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);box-shadow:0 20px 60px rgba(0,0,0,0.6);opacity:0;transform:translateX(50px)}
+.hf{background:rgba(17,16,48,0.82);border:1px solid rgba(255,255,255,0.15);border-top:4px solid var(--red);border-radius:14px;padding:32px;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);box-shadow:0 20px 60px rgba(0,0,0,0.6);opacity:1;transform:none}
 .hf-t{font-family:var(--display);font-size:24px;letter-spacing:2px;color:var(--white);margin-bottom:8px}
 .hf-s{font-size:12px;color:rgba(255,255,255,0.55);margin-bottom:24px;line-height:1.5}
 .hf-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
@@ -254,7 +254,7 @@ body{font-family:var(--body);color:var(--white);background:var(--blue-dark);over
 /* ═══ ABOUT ═══ */
 .about-atp{background:var(--white);color:var(--dark);padding:120px 0 100px;position:relative;overflow:hidden}
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
-.about-text h2{font-family:var(--display);font-size:clamp(40px,5vw,54px);letter-spacing:2px;color:var(--blue-dark);margin-bottom:20px;line-height:1}
+.about-text h2{font-family:var(--display);font-size:clamp(32px,3.5vw,42px);letter-spacing:2px;color:var(--blue-dark);margin-bottom:20px;line-height:1}
 .about-text h2 .red{color:var(--red)}
 .about-text p{font-size:15px;color:#5A5F6E;line-height:1.8;margin-bottom:20px}
 .about-text p strong{color:var(--blue-dark)}
@@ -494,53 +494,23 @@ gsap.from('.trust-card',{scrollTrigger:{trigger:'.trust-sec',start:'top 70%'},y:
 
 /* ═══ SURVEY SIMULATION ═══ */
 function runSurveySim(){
-  const tl=gsap.timeline({repeat:-1,repeatDelay:4});
+  const tl=gsap.timeline({repeat:-1,repeatDelay:6});
   const smsView=document.getElementById('phone-sms-view');
   const formView=document.getElementById('phone-form-view');
   const statusBar=document.querySelector('.iphone-statusbar');
-  tl.set('.tf-question',{className:'tf-question'})
-    .set('#tf-q1',{className:'tf-question active'})
-    .set('.tf-bar',{width:'0%'})
-    .set('#tf-in-first',{text:''}).set('#tf-in-last',{text:''}).set('#tf-in-zip',{text:''})
-    .set('.tf-ok',{className:'tf-ok'}).set('.tf-opt',{className:'tf-opt'})
-    .set('.sms-tap-indicator',{opacity:0,scale:1.5})
-    .call(()=>{smsView.style.display='flex';formView.style.display='none';statusBar.classList.remove('inverted');statusBar.closest('.iphone-screen').classList.remove('dark-mode')});
+  // Reset to SMS view
+  tl.set('.sms-tap-indicator',{opacity:0,scale:1.5})
+    .call(()=>{smsView.style.display='flex';smsView.style.transform='';smsView.style.opacity='1';formView.style.display='none';if(statusBar){statusBar.classList.remove('inverted');statusBar.closest('.iphone-screen').classList.remove('dark-mode')}});
+  // Show tap indicator after pause
   tl.to('.sms-tap-indicator',{opacity:1,scale:1,duration:0.5,ease:'back.out',delay:2})
     .to('.sms-tap-indicator',{scale:0.85,duration:0.1,yoyo:true,repeat:1},'+=0.3')
     .to('#sms-link',{color:'var(--red)',duration:0.2})
-    .call(()=>{formView.style.display='flex';statusBar.classList.add('inverted');statusBar.closest('.iphone-screen').classList.add('dark-mode')})
+  // Transition to web view (BenchmarkWeb iframe)
+    .call(()=>{formView.style.display='flex';if(statusBar){statusBar.classList.add('inverted');statusBar.closest('.iphone-screen').classList.add('dark-mode')}})
     .to(smsView,{x:'-100%',opacity:0,duration:0.4,ease:'power2.in',onComplete:()=>{smsView.style.display='none'}})
     .from(formView,{x:'100%',opacity:0,duration:0.4,ease:'power2.out'})
-    .set('#tf-q1 .tf-input-wrap',{className:'tf-input-wrap typing'})
-    .to('#tf-in-first',{text:'John',duration:0.8,ease:'none',delay:0.6})
-    .set('#tf-q1 .tf-input-wrap',{className:'tf-input-wrap'})
-    .set('#tf-q1 .tf-ok',{className:'tf-ok show'})
-    .to('.tf-bar',{width:'20%',duration:0.3},'+=0.4')
-    .set('#tf-q1',{className:'tf-question exit-up'})
-    .set('#tf-q2',{className:'tf-question active'},'+=0.15')
-    .set('#tf-q2 .tf-input-wrap',{className:'tf-input-wrap typing'})
-    .to('#tf-in-last',{text:'Doe',duration:0.6,ease:'none',delay:0.5})
-    .set('#tf-q2 .tf-input-wrap',{className:'tf-input-wrap'})
-    .set('#tf-q2 .tf-ok',{className:'tf-ok show'})
-    .to('.tf-bar',{width:'40%',duration:0.3},'+=0.4')
-    .set('#tf-q2',{className:'tf-question exit-up'})
-    .set('#tf-q3',{className:'tf-question active'},'+=0.15')
-    .set('#tf-q3 .tf-input-wrap',{className:'tf-input-wrap typing'})
-    .to('#tf-in-zip',{text:'22041',duration:0.8,ease:'none',delay:0.5})
-    .set('#tf-q3 .tf-input-wrap',{className:'tf-input-wrap'})
-    .set('#tf-q3 .tf-ok',{className:'tf-ok show'})
-    .to('.tf-bar',{width:'60%',duration:0.3},'+=0.4')
-    .set('#tf-q3',{className:'tf-question exit-up'})
-    .set('#tf-q4',{className:'tf-question active'},'+=0.15')
-    .to('#tf-opt-b',{className:'tf-opt selected',duration:0.2,delay:0.8})
-    .to('.tf-bar',{width:'80%',duration:0.3},'+=0.3')
-    .set('#tf-q4',{className:'tf-question exit-up'})
-    .set('#tf-q5',{className:'tf-question active'},'+=0.15')
-    .to('#tf-opt-def',{className:'tf-opt selected',duration:0.2,delay:0.8})
-    .to('.tf-bar',{width:'100%',duration:0.3},'+=0.3')
-    .set('#tf-q5',{className:'tf-question exit-up'})
-    .set('#tf-done',{className:'tf-question active'},'+=0.15')
-    .to({},{duration:3});
+  // Hold on the survey view for 8 seconds
+    .to({},{duration:8});
   return tl;
 }
 ScrollTrigger.create({trigger:'.survey-sim',start:'top 60%',onEnter:()=>runSurveySim()});
@@ -645,9 +615,8 @@ HTML,
         <a href="#" class="btn-video"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> WATCH THE VIDEO</a>
       </div>
     </div>
-    <div class="hf" style="padding:0;border:none;background:transparent;backdrop-filter:none;box-shadow:none">
-      <div data-tf-live="nhPPYcJ8" style="width:100%;min-height:500px"></div>
-      <script src="//embed.typeform.com/next/embed.js"></script>
+    <div class="hf" style="padding:0;border:none;background:transparent;backdrop-filter:none;box-shadow:none;opacity:1;transform:none">
+      <iframe src="https://atp.ameritrackpolls.com/to/nhPPYcJ8" style="width:100%;min-height:500px;border:0;border-radius:14px" loading="lazy"></iframe>
     </div>
   </div></div>
 </section>
@@ -669,11 +638,10 @@ HTML,
   </div>
   <div class="about-video">
     <div style="width:100%;max-width:560px;margin:0 auto">
-      <div style="margin-bottom:16px;text-align:center"><img src="{ATP_PLUGIN_URL}assets/images/ATP-Logo-Red-White.png" alt="America Tracking Polls" style="width:120px;height:auto"></div>
       <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:14px;box-shadow:0 20px 60px rgba(17,16,48,0.3)">
         <iframe src="https://www.youtube.com/embed/hhw5CgypgQE" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>
       </div>
-      <p class="video-caption" style="text-align:center;margin-top:16px;font-family:var(--display);font-size:14px;letter-spacing:2px;color:var(--blue-dark)">Data Driven Websites</p>
+      <p style="text-align:center;margin-top:16px;font-family:var(--display);font-size:14px;letter-spacing:2px;color:var(--blue-dark)">Data Driven Websites</p>
     </div>
   </div>
 </div></div></section>
@@ -688,38 +656,54 @@ HTML,
 <section class="survey-sim" id="survey-sim"><div class="wrap">
   <div class="survey-hdr">
     <h2><span style="color:var(--red)">INTELLIGENCE</span> DRIVES RESULTS</h2>
-    <p>Reach voters where they are. Build real connections. Convert supporters into donors, volunteers, and votes&mdash;and consistently turn undecided voters into supporters.</p>
+    <p>Reach voters where they are. Build real connections. Convert supporters into donors, volunteers, and votes.</p>
   </div>
   <div class="survey-container">
-    <div style="flex-shrink:0;width:320px">
-      <div style="width:100%;border-radius:14px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.25)">
-        <iframe src="https://atp.ameritrackpolls.com/BenchmarkWeb" style="width:100%;height:680px;border:0" loading="lazy"></iframe>
+    <div class="iphone" style="flex-shrink:0">
+      <div class="iphone-screen">
+        <div class="iphone-dynamic-island"></div>
+        <div class="iphone-statusbar"><span>9:41</span><div class="iphone-statusbar-icons"><svg width="16" height="12" viewBox="0 0 16 12"><rect x="0" y="3" width="3" height="9" rx="0.5" fill="#000"/><rect x="4.5" y="2" width="3" height="10" rx="0.5" fill="#000"/><rect x="9" y="0" width="3" height="12" rx="0.5" fill="#000"/><rect x="13.5" y="1" width="3" height="11" rx="0.5" fill="#000" opacity="0.3"/></svg><svg width="22" height="12" viewBox="0 0 22 12"><rect x="0" y="1" width="18" height="10" rx="2" stroke="#000" stroke-width="1.2" fill="none"/><rect x="1.5" y="2.5" width="12" height="7" rx="1" fill="#000"/><rect x="19" y="4" width="2" height="4" rx="0.5" fill="#000"/></svg></div></div>
+        <div id="phone-sms-view" style="display:flex;flex-direction:column;flex:1;overflow:hidden">
+          <div class="msg-header">
+            <a class="msg-back"><svg width="10" height="18" viewBox="0 0 10 18" fill="none"><path d="M9 1L1 9L9 17" stroke="var(--blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            <div class="msg-avatar">SC</div>
+            <div style="display:flex;flex-direction:column"><div class="msg-contact-name">Sarah Chen Campaign</div><div class="msg-contact-label">SMS</div></div>
+          </div>
+          <div class="msg-thread">
+            <div class="msg-time">Today 2:14 PM</div>
+            <div class="msg-bubble msg-incoming">Hi! It&rsquo;s Sarah Chen&rsquo;s campaign. We want to best serve your needs. Please take 30 seconds to fill out this quick survey:</div>
+            <div class="msg-bubble msg-incoming" style="margin-top:2px"><a href="#" id="sms-link" style="color:var(--blue);text-decoration:underline;font-family:-apple-system,sans-serif;font-size:14px">https://form.run/sarahchen</a></div>
+            <div class="msg-delivered">Delivered</div>
+          </div>
+          <div class="msg-inputbar">
+            <div class="msg-inputbar-plus"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+            <div class="msg-inputbar-field">Text Message</div>
+            <div class="msg-inputbar-send"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" fill="var(--blue)"/></svg></div>
+          </div>
+          <div class="sms-tap-indicator"><svg viewBox="0 0 24 24" width="36" height="36"><path fill="rgba(0,0,0,0.6)" d="M9 11.24V7.5C9 6.12 10.12 5 11.5 5S14 6.12 14 7.5v3.74c1.21-.81 2-2.18 2-3.74C16 5.01 13.99 3 11.5 3S7 5.01 7 7.5c0 1.56.79 2.93 2 3.74zm9.84 4.63l-4.54-2.26c-.17-.07-.35-.11-.54-.11H13v-6c0-.83-.67-1.5-1.5-1.5S10 6.67 10 7.5v10.74l-3.43-.72c-.08-.01-.15-.03-.24-.03-.31 0-.59.13-.79.33l-.79.8 4.94 4.94c.27.27.65.44 1.04.44h6.79c.75 0 1.33-.55 1.44-1.28l.75-5.27c.01-.07.02-.14.02-.21 0-.69-.39-1.32-1.02-1.53z"/></svg></div>
+        </div>
+        <div id="phone-form-view" style="display:none;flex-direction:column;flex:1;overflow:hidden;background:#fff">
+          <div style="background:var(--blue-dark);padding:10px 16px;display:flex;align-items:center;gap:10px">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            <span style="font-family:-apple-system,sans-serif;font-size:14px;font-weight:600;color:#fff">Voter Insight Survey</span>
+          </div>
+          <iframe src="https://atp.ameritrackpolls.com/BenchmarkWeb" style="flex:1;width:100%;border:0" loading="lazy"></iframe>
+        </div>
       </div>
     </div>
     <div class="survey-text">
-      <h3>YOUR BENCHMARK SURVEY IS YOUR COMPETITIVE ADVANTAGE</h3>
-      <p>Most campaigns guess. You won&rsquo;t.</p>
-      <p>We deliver MMS surveys&mdash;like the one you see here&mdash;to registered voters across your district, linking to a fast, mobile-optimized survey with objective, unbiased questions.</p>
-      <p>Within seconds, voters tell you exactly what matters&mdash;economy, healthcare, education, infrastructure. At the same time, you&rsquo;re tracking Name ID and favorability persistently in real time&mdash;so you know not just what voters think, but how they see you.</p>
-      <p>And because your campaign isn&rsquo;t identified until the end, you get something your opponent doesn&rsquo;t: honest, unfiltered voter truth.</p>
-
-      <h4>WHAT YOUR OPPONENT DOESN&rsquo;T KNOW&mdash;YOU DO</h4>
+      <h3>YOUR BENCHMARK SURVEY</h3>
+      <p>We deliver MMS surveys to registered voters across your district&mdash;linking to a fast, mobile-optimized survey. You track Name ID and favorability in real time.</p>
+      <h4>WHAT YOUR OPPONENT DOESN&rsquo;T KNOW</h4>
       <ul>
         <li>Which issues actually move votes</li>
         <li>Your true Name ID&mdash;and how fast it&rsquo;s growing</li>
-        <li>Who will show up&mdash;and who needs to be persuaded</li>
-        <li>Where support is strong&mdash;and where you&rsquo;re losing ground</li>
-        <li>Real sentiment data&mdash;not consultant assumptions</li>
+        <li>Who needs to be persuaded</li>
+        <li>Where support is strong&mdash;and where you&rsquo;re losing</li>
+        <li>Real sentiment&mdash;not consultant assumptions</li>
       </ul>
-
-      <h4>THIS ISN&rsquo;T POLLING. IT&rsquo;S CONTROL.</h4>
-      <p>Every response immediately powers your campaign&mdash;shaping your messaging across MMS, digital, social, your website, print, and even how AI platforms define you.</p>
-      <p>While others react late, you adjust in real time.</p>
       <p><strong>They guess. You know. They spend. You convert. They hope. You win.</strong></p>
-
-      <h4 style="margin-top:32px;color:var(--red)">BUILT TO PERFORM. BUILT TO PROTECT.</h4>
-      <p>All MMS outreach is fully TCPA and 10DLC compliant, so you can move fast, scale confidently, and stay protected.</p>
-      <p><strong>If you&rsquo;re not tracking Name ID persistently, you&rsquo;re losing voters you&rsquo;ll never see coming.</strong></p>
+      <p style="margin-top:16px;font-family:var(--mono);font-size:11px;color:#999;letter-spacing:1px">TCPA &amp; 10DLC COMPLIANT</p>
     </div>
   </div>
 </div></section>
@@ -842,8 +826,7 @@ HTML,
     <p class="intake-sub">Whether you're launching a campaign, exploring a run, or building your public brand before Election Day&mdash;we'll create a custom strategy powered by real voter data. Fill out the form below and our team will reach out within 24 hours.</p>
     <p class="intake-sub" style="margin-bottom:40px;font-size:12px;opacity:0.6">Free consultation. No obligation. We serve local, statewide, and federal races.</p>
     <div class="intake-embed" style="background:transparent;border:none;display:block;padding:0">
-      <div data-tf-live="nhPPYcJ8" style="width:100%;min-height:500px"></div>
-      <script src="//embed.typeform.com/next/embed.js"></script>
+      <iframe src="https://atp.ameritrackpolls.com/to/nhPPYcJ8" style="width:100%;min-height:600px;border:0;border-radius:14px" loading="lazy"></iframe>
     </div>
   </div>
 </div></section>
@@ -858,7 +841,7 @@ HTML,
 <footer class="ftr" id="footer"><div class="wrap">
   <div class="ftr-b">
     <div class="hdr-brand" style="font-size:16px"><span class="w">AMERICA </span><span class="r">TRACKING </span><span class="w">POLLS</span></div>
-    <div class="ftr-l"><a href="#">Knowledge Base</a><a href="#">Compliance &amp; TCPA</a><a href="#">AI Ethics Pledge</a><a href="#">Privacy</a></div>
+    <div class="ftr-l"><a href="#about">About ATP</a><a href="#journey">Strategy</a><a href="#aeo">AEO</a><a href="#intake">Get Started</a></div>
     <div class="ftr-c">&copy; 2026 America Tracking Polls LLC. Built by the Numbers.</div>
   </div>
 </div></footer>
