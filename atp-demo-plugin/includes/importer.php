@@ -340,13 +340,15 @@ function atp_importer_handle_import() {
     $content = implode( "\n", $set['shortcodes'] );
 
     // ── Determine page template ───────────────────────────────────────────────
-    $template = atp_importer_detect_canvas_template();
+    // Always prefer Elementor Canvas if Elementor is active.
+    $use_elementor = defined( 'ELEMENTOR_VERSION' );
+    $template      = $use_elementor ? 'elementor_canvas' : atp_importer_detect_canvas_template();
 
     // ── Insert page ───────────────────────────────────────────────────────────
     $page_id = wp_insert_post( [
         'post_title'    => $set['title'],
         'post_content'  => $content,
-        'post_status'   => 'draft',
+        'post_status'   => 'publish',
         'post_type'     => 'page',
         'post_author'   => get_current_user_id(),
         'page_template' => $template,
@@ -356,6 +358,14 @@ function atp_importer_handle_import() {
         return '<div class="notice notice-error"><p>Failed to create page: '
             . esc_html( $page_id->get_error_message() ) . '</p></div>';
     }
+
+    // ── Elementor data ────────────────────────────────────────────────────────
+    if ( $use_elementor ) {
+        atp_importer_set_elementor_data( $page_id, $content );
+    }
+
+    // ── Hide the page title (no "ATP Homepage" heading) ──────────────────────
+    update_post_meta( $page_id, '_atp_hide_title', '1' );
 
     // ── SEO metadata (Yoast / generic) ────────────────────────────────────────
     atp_importer_set_seo_meta( $page_id, $set['focus_kw'], $set['meta_desc'] );
@@ -370,12 +380,13 @@ function atp_importer_handle_import() {
     // ── Success ───────────────────────────────────────────────────────────────
     $edit_link = get_edit_post_link( $page_id, 'raw' );
     $view_link = get_permalink( $page_id );
+    $tpl_note  = $use_elementor ? ' (Elementor Canvas)' : ( $template ? " ($template)" : '' );
 
     return '<div class="notice notice-success is-dismissible"><p>'
-        . '<strong>' . esc_html( $set['title'] ) . '</strong> imported successfully as a draft.'
+        . '<strong>' . esc_html( $set['title'] ) . '</strong> imported and published' . $tpl_note . '.'
         . $image_note
         . ' &nbsp; <a href="' . esc_url( $edit_link ) . '">Edit page</a>'
-        . ' | <a href="' . esc_url( $view_link ) . '" target="_blank">Preview page</a>'
+        . ' | <a href="' . esc_url( $view_link ) . '" target="_blank">View page</a>'
         . '</p></div>';
 }
 
@@ -603,4 +614,269 @@ function atp_importer_find_existing_attachment( $focus_kw ) {
     );
 
     return $id ? (int) $id : false;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Helper: set Elementor page data
+   ───────────────────────────────────────────────────────────────────────── */
+
+/**
+ * Write Elementor meta so the page renders as an Elementor Canvas page with
+ * an HTML widget containing all the shortcodes. This avoids the theme's
+ * header/footer and title entirely.
+ *
+ * @param int    $post_id Post ID.
+ * @param string $content Shortcode content (newline-separated).
+ */
+function atp_importer_set_elementor_data( $post_id, $content ) {
+
+    // Build Elementor JSON structure: one section → one column → one HTML widget.
+    $elementor_data = [
+        [
+            'id'       => wp_generate_password( 7, false ),
+            'elType'   => 'section',
+            'settings' => [
+                'layout'          => 'full_width',
+                'content_width'   => 'full',
+                'gap'             => 'no',
+                'padding'         => [ 'top' => '0', 'right' => '0', 'bottom' => '0', 'left' => '0', 'unit' => 'px', 'isLinked' => false ],
+                'margin'          => [ 'top' => '0', 'right' => '0', 'bottom' => '0', 'left' => '0', 'unit' => 'px', 'isLinked' => false ],
+            ],
+            'elements' => [
+                [
+                    'id'       => wp_generate_password( 7, false ),
+                    'elType'   => 'column',
+                    'settings' => [
+                        '_column_size' => 100,
+                        'padding'      => [ 'top' => '0', 'right' => '0', 'bottom' => '0', 'left' => '0', 'unit' => 'px', 'isLinked' => false ],
+                    ],
+                    'elements' => [
+                        [
+                            'id'         => wp_generate_password( 7, false ),
+                            'elType'     => 'widget',
+                            'widgetType' => 'html',
+                            'settings'   => [
+                                'html' => $content,
+                            ],
+                            'elements'   => [],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ];
+
+    // Set Elementor post meta.
+    update_post_meta( $post_id, '_elementor_data', wp_slash( wp_json_encode( $elementor_data ) ) );
+    update_post_meta( $post_id, '_elementor_edit_mode', 'builder' );
+    update_post_meta( $post_id, '_elementor_template_type', 'wp-page' );
+    update_post_meta( $post_id, '_elementor_version', defined( 'ELEMENTOR_VERSION' ) ? ELEMENTOR_VERSION : '3.0.0' );
+    update_post_meta( $post_id, '_wp_page_template', 'elementor_canvas' );
+
+    // Clear Elementor CSS cache for this post so it regenerates.
+    delete_post_meta( $post_id, '_elementor_css' );
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   SITE-WIDE HEADER / FOOTER SHORTCODE INJECTION
+   ═════════════════════════════════════════════════════════════════════════ */
+
+/**
+ * Register settings for site-wide header/footer shortcodes.
+ */
+add_action( 'admin_init', 'atp_headerfooter_register_settings' );
+function atp_headerfooter_register_settings() {
+    register_setting( 'atp_headerfooter', 'atp_sitewide_header', [ 'default' => '' ] );
+    register_setting( 'atp_headerfooter', 'atp_sitewide_footer', [ 'default' => '' ] );
+}
+
+/**
+ * Add "Header & Footer" submenu under ATP Shortcodes.
+ */
+add_action( 'admin_menu', 'atp_headerfooter_menu' );
+function atp_headerfooter_menu() {
+    add_submenu_page(
+        'atp-demo-shortcodes',
+        'Header & Footer',
+        'Header & Footer',
+        'manage_options',
+        'atp-header-footer',
+        'atp_headerfooter_page'
+    );
+}
+
+/**
+ * Render the header/footer settings page.
+ */
+function atp_headerfooter_page() {
+    if ( ! current_user_can( 'manage_options' ) ) return;
+
+    if ( isset( $_POST['atp_hf_save'] ) && check_admin_referer( 'atp_hf_save' ) ) {
+        update_option( 'atp_sitewide_header', wp_unslash( $_POST['atp_sitewide_header'] ?? '' ) );
+        update_option( 'atp_sitewide_footer', wp_unslash( $_POST['atp_sitewide_footer'] ?? '' ) );
+        echo '<div class="notice notice-success is-dismissible"><p>Header & Footer settings saved.</p></div>';
+    }
+
+    $header_val = get_option( 'atp_sitewide_header', '[atp_hp_pollbar][atp_hp_header]' );
+    $footer_val = get_option( 'atp_sitewide_footer', '[atp_hp_footer]' );
+    ?>
+    <div class="wrap atp-admin-wrap">
+        <div class="atp-admin-header" style="display:flex;align-items:center;gap:20px;background:#0B1C33;color:#fff;padding:20px 28px;border-radius:8px;margin:20px 0 28px">
+            <img src="<?php echo esc_url( ATP_DEMO_URL . 'assets/images/ATP-Logo-Red-White.png' ); ?>" alt="ATP" style="width:56px;height:auto">
+            <div>
+                <h1 style="color:#fff;margin:0">Site-Wide Header & Footer</h1>
+                <p style="color:#ccc;margin:4px 0 0">Enter shortcodes to inject on every page/post. Individual pages can opt out via the "ATP Display Options" meta box.</p>
+            </div>
+        </div>
+        <form method="post">
+            <?php wp_nonce_field( 'atp_hf_save' ); ?>
+            <table class="form-table">
+                <tr>
+                    <th scope="row"><label for="atp_sitewide_header">Header Shortcodes</label></th>
+                    <td>
+                        <textarea name="atp_sitewide_header" id="atp_sitewide_header" rows="3" class="large-text code"><?php echo esc_textarea( $header_val ); ?></textarea>
+                        <p class="description">Rendered at the top of the page body. Example: <code>[atp_hp_pollbar][atp_hp_header]</code></p>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"><label for="atp_sitewide_footer">Footer Shortcodes</label></th>
+                    <td>
+                        <textarea name="atp_sitewide_footer" id="atp_sitewide_footer" rows="3" class="large-text code"><?php echo esc_textarea( $footer_val ); ?></textarea>
+                        <p class="description">Rendered at the bottom of the page body. Example: <code>[atp_hp_footer]</code></p>
+                    </td>
+                </tr>
+            </table>
+            <p class="submit">
+                <button type="submit" name="atp_hf_save" class="button button-primary">Save Header & Footer</button>
+            </p>
+        </form>
+    </div>
+    <?php
+}
+
+/**
+ * Inject site-wide header shortcodes after <body>.
+ */
+add_action( 'wp_body_open', 'atp_inject_sitewide_header', 1 );
+function atp_inject_sitewide_header() {
+    if ( is_admin() ) return;
+
+    $post_id = get_the_ID();
+
+    // Check per-page opt-out.
+    if ( $post_id && get_post_meta( $post_id, '_atp_hide_header', true ) === '1' ) {
+        return;
+    }
+
+    $header = get_option( 'atp_sitewide_header', '' );
+    if ( $header ) {
+        echo do_shortcode( $header );
+    }
+}
+
+/**
+ * Inject site-wide footer shortcodes before </body>.
+ */
+add_action( 'wp_footer', 'atp_inject_sitewide_footer', 99 );
+function atp_inject_sitewide_footer() {
+    if ( is_admin() ) return;
+
+    $post_id = get_the_ID();
+
+    // Check per-page opt-out.
+    if ( $post_id && get_post_meta( $post_id, '_atp_hide_footer', true ) === '1' ) {
+        return;
+    }
+
+    $footer = get_option( 'atp_sitewide_footer', '' );
+    if ( $footer ) {
+        echo do_shortcode( $footer );
+    }
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   PER-PAGE/POST DISPLAY OPTIONS META BOX
+   ═════════════════════════════════════════════════════════════════════════ */
+
+/**
+ * Register the "ATP Display Options" meta box on all public post types.
+ */
+add_action( 'add_meta_boxes', 'atp_display_options_metabox' );
+function atp_display_options_metabox() {
+    $post_types = get_post_types( [ 'public' => true ], 'names' );
+    foreach ( $post_types as $pt ) {
+        add_meta_box(
+            'atp_display_options',
+            'ATP Display Options',
+            'atp_display_options_render',
+            $pt,
+            'side',
+            'default'
+        );
+    }
+}
+
+/**
+ * Render the meta box with checkboxes for hiding header, footer, and title.
+ */
+function atp_display_options_render( $post ) {
+    wp_nonce_field( 'atp_display_opts', 'atp_display_opts_nonce' );
+
+    $hide_header = get_post_meta( $post->ID, '_atp_hide_header', true );
+    $hide_footer = get_post_meta( $post->ID, '_atp_hide_footer', true );
+    $hide_title  = get_post_meta( $post->ID, '_atp_hide_title', true );
+    ?>
+    <p style="margin:0 0 8px"><strong>Site-wide elements</strong></p>
+    <label style="display:block;margin-bottom:6px">
+        <input type="checkbox" name="_atp_hide_header" value="1" <?php checked( $hide_header, '1' ); ?>>
+        Hide site-wide header on this page
+    </label>
+    <label style="display:block;margin-bottom:6px">
+        <input type="checkbox" name="_atp_hide_footer" value="1" <?php checked( $hide_footer, '1' ); ?>>
+        Hide site-wide footer on this page
+    </label>
+    <hr style="margin:10px 0">
+    <label style="display:block;margin-bottom:4px">
+        <input type="checkbox" name="_atp_hide_title" value="1" <?php checked( $hide_title, '1' ); ?>>
+        Hide page title
+    </label>
+    <p class="description" style="margin-top:6px">Use for canvas/shortcode pages that have their own header, footer, or title built in.</p>
+    <?php
+}
+
+/**
+ * Save the meta box values.
+ */
+add_action( 'save_post', 'atp_display_options_save' );
+function atp_display_options_save( $post_id ) {
+    if ( ! isset( $_POST['atp_display_opts_nonce'] )
+        || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['atp_display_opts_nonce'] ) ), 'atp_display_opts' )
+    ) {
+        return;
+    }
+
+    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
+    if ( ! current_user_can( 'edit_post', $post_id ) ) return;
+
+    $fields = [ '_atp_hide_header', '_atp_hide_footer', '_atp_hide_title' ];
+    foreach ( $fields as $key ) {
+        if ( isset( $_POST[ $key ] ) && $_POST[ $key ] === '1' ) {
+            update_post_meta( $post_id, $key, '1' );
+        } else {
+            delete_post_meta( $post_id, $key );
+        }
+    }
+}
+
+/**
+ * Hide the page title via CSS when _atp_hide_title is set.
+ */
+add_action( 'wp_head', 'atp_maybe_hide_title' );
+function atp_maybe_hide_title() {
+    if ( is_admin() ) return;
+
+    $post_id = get_the_ID();
+    if ( $post_id && get_post_meta( $post_id, '_atp_hide_title', true ) === '1' ) {
+        echo '<style>.entry-title,.page-title,.post-title,h1.wp-block-post-title{display:none!important}</style>' . "\n";
+    }
 }
