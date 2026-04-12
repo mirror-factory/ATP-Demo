@@ -22,11 +22,18 @@ function atp_demo_register_shortcodes() {
 
 /**
  * Generic HTML shortcode renderer — reads from DB or falls back to default.
+ * For atp_cand_* shortcodes, also runs the candidate data token replacement.
  */
 function atp_demo_render_shortcode( $atts, $content, $tag ) {
     $stored = get_option( 'atp_sc_' . $tag );
     $html   = ( $stored !== false && $stored !== '' ) ? $stored : atp_demo_get_default( $tag );
     $html   = str_replace( '{ATP_PLUGIN_URL}', ATP_DEMO_URL, $html );
+
+    // Candidate page shortcodes get token replacement
+    if ( str_starts_with( $tag, 'atp_cand_' ) && function_exists( 'atp_cand_replace_tokens' ) ) {
+        $html = atp_cand_replace_tokens( $html );
+    }
+
     return $html;
 }
 

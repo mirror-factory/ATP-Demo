@@ -20,6 +20,7 @@ require_once ATP_DEMO_DIR . 'includes/updater.php';
 require_once ATP_DEMO_DIR . 'includes/importer.php';
 require_once ATP_DEMO_DIR . 'includes/setup-wizard.php';
 require_once ATP_DEMO_DIR . 'includes/changelog.php';
+require_once ATP_DEMO_DIR . 'includes/candidate-page.php';
 
 // Intake form plugin — load only if not already active as standalone
 if ( ! function_exists( 'atp_default_questions' ) ) {
