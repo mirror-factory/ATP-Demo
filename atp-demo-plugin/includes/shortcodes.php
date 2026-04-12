@@ -7,12 +7,20 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 add_action( 'init', 'atp_demo_register_shortcodes' );
 
 function atp_demo_register_shortcodes() {
+    // PHP-powered shortcodes — these get dedicated handlers that generate
+    // dynamic HTML from structured data instead of static templates.
+    $php_handlers = [
+        'atp_logo'              => 'atp_demo_render_logo',
+        'atp_cand_issues'       => 'atp_cand_render_issues',
+        'atp_cand_endorsements' => 'atp_cand_render_endorsements',
+        'atp_cand_social'       => 'atp_cand_render_social',
+    ];
+
     $registry = atp_demo_get_registry();
     foreach ( $registry as $group ) {
         foreach ( $group['shortcodes'] as $sc ) {
-            // atp_logo gets its own handler (uses PHP for dynamic URL)
-            if ( $sc['tag'] === 'atp_logo' ) {
-                add_shortcode( 'atp_logo', 'atp_demo_render_logo' );
+            if ( isset( $php_handlers[ $sc['tag'] ] ) && function_exists( $php_handlers[ $sc['tag'] ] ) ) {
+                add_shortcode( $sc['tag'], $php_handlers[ $sc['tag'] ] );
             } else {
                 add_shortcode( $sc['tag'], 'atp_demo_render_shortcode' );
             }

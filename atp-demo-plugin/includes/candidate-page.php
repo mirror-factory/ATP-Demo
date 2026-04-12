@@ -100,14 +100,210 @@ function atp_cand_replace_tokens( $html ) {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   Hook into shortcode rendering
+   Dynamic PHP renderers for structured sections
+   These generate the correct number of cards from intake data.
    ───────────────────────────────────────────────────────────────────────── */
 
 /**
- * Filter the generic shortcode output for atp_cand_* tags.
- * This runs AFTER the standard renderer in shortcodes.php.
+ * Render issues section — parses issue_categories (array) and issue_positions
+ * (structured text with "Category: description" format) into individual cards.
  */
-add_filter( 'atp_cand_shortcode_output', 'atp_cand_replace_tokens' );
+function atp_cand_render_issues( $atts = [] ) {
+    $data = atp_cand_get_data();
+
+    // Parse issue_positions into structured array
+    // Expected format: "Category Name: Position text...\n\nCategory Name: Position text..."
+    $cards = [];
+    if ( ! empty( $data['issue_positions'] ) ) {
+        // Split on double newline or on lines that start with a category name followed by colon
+        $raw = $data['issue_positions'];
+        $chunks = preg_split( '/\n\n+/', $raw );
+        foreach ( $chunks as $chunk ) {
+            $chunk = trim( $chunk );
+            if ( empty( $chunk ) ) continue;
+            // Try to split "Category: description"
+            if ( preg_match( '/^([^:]+):\s*(.+)$/s', $chunk, $m ) ) {
+                $cards[] = [
+                    'name' => trim( $m[1] ),
+                    'desc' => trim( $m[2] ),
+                ];
+            } else {
+                // No colon format — use as-is with generic label
+                $cards[] = [
+                    'name' => 'Policy Position',
+                    'desc' => $chunk,
+                ];
+            }
+        }
+    }
+
+    // Fallback: if no positions parsed but we have categories, show categories as empty cards
+    if ( empty( $cards ) && ! empty( $data['issue_categories'] ) ) {
+        $cats = is_array( $data['issue_categories'] )
+            ? $data['issue_categories']
+            : array_map( 'trim', explode( ',', $data['issue_categories'] ) );
+        foreach ( $cats as $cat ) {
+            $cards[] = [ 'name' => $cat, 'desc' => '' ];
+        }
+    }
+
+    // If still nothing, return the default template HTML with token replacement
+    if ( empty( $cards ) ) {
+        $html = atp_demo_get_default( 'atp_cand_issues' );
+        return atp_cand_replace_tokens( $html );
+    }
+
+    $differentiator = esc_html( $data['differentiator'] ?? '' );
+
+    $out  = '<section class="cand-section cand-section-cream" id="issues">' . "\n";
+    $out .= '  <div class="cand-container">' . "\n";
+    $out .= '    <div class="cand-section-label">Where I Stand</div>' . "\n";
+    $out .= '    <h2 class="cand-section-title">Key Issues</h2>' . "\n";
+    if ( $differentiator ) {
+        $out .= '    <p class="cand-section-subtitle">' . $differentiator . '</p>' . "\n";
+    }
+    $out .= '    <div class="cand-issues-grid">' . "\n";
+
+    foreach ( $cards as $i => $card ) {
+        $out .= '      <div class="cand-issue-card">' . "\n";
+        $out .= '        <div class="cand-issue-tag">Priority Issue</div>' . "\n";
+        $out .= '        <h3 class="cand-issue-name">' . esc_html( $card['name'] ) . '</h3>' . "\n";
+        if ( $card['desc'] ) {
+            $out .= '        <p class="cand-issue-desc">' . esc_html( $card['desc'] ) . '</p>' . "\n";
+        }
+        $out .= '      </div>' . "\n";
+    }
+
+    $out .= '    </div>' . "\n";
+    $out .= '  </div>' . "\n";
+    $out .= '</section>';
+
+    return $out;
+}
+
+/**
+ * Render endorsements section — parses the endorsements textarea into
+ * individual quote cards. Expected format per line:
+ *   Name — 'Quote text'
+ *   Name, Title — 'Quote text'
+ *   Organization name (no quote)
+ */
+function atp_cand_render_endorsements( $atts = [] ) {
+    $data = atp_cand_get_data();
+
+    if ( empty( $data['endorsements'] ) ) {
+        // No data — return default template
+        $html = atp_demo_get_default( 'atp_cand_endorsements' );
+        return atp_cand_replace_tokens( $html );
+    }
+
+    $lines = preg_split( '/\n+/', trim( $data['endorsements'] ) );
+    $items = [];
+
+    foreach ( $lines as $line ) {
+        $line = trim( $line );
+        if ( empty( $line ) ) continue;
+
+        $name  = $line;
+        $quote = '';
+        $role  = '';
+
+        // Try to extract quote: Name — 'Quote' or Name — "Quote"
+        if ( preg_match( '/^(.+?)\s*[—–-]\s*[\'"](.+?)[\'"](.*)$/u', $line, $m ) ) {
+            $name  = trim( $m[1] );
+            $quote = trim( $m[2] );
+        } elseif ( preg_match( '/^(.+?)\s*[—–-]\s*(.+)$/u', $line, $m ) ) {
+            // Name — Description (no quotes)
+            $name = trim( $m[1] );
+            $quote = trim( $m[2] );
+        }
+
+        // Try to split name from role: "Name, Title" or "Name (Title)"
+        if ( preg_match( '/^(.+?),\s*(.+)$/', $name, $m2 ) ) {
+            $name = trim( $m2[1] );
+            $role = trim( $m2[2] );
+        }
+
+        $items[] = [ 'name' => $name, 'role' => $role, 'quote' => $quote ];
+    }
+
+    if ( empty( $items ) ) {
+        $html = atp_demo_get_default( 'atp_cand_endorsements' );
+        return atp_cand_replace_tokens( $html );
+    }
+
+    $out  = '<section class="cand-section cand-section-light" id="endorsements">' . "\n";
+    $out .= '  <div class="cand-container">' . "\n";
+    $out .= '    <div class="cand-section-label">Endorsements</div>' . "\n";
+    $out .= '    <h2 class="cand-section-title">Trusted by Leaders</h2>' . "\n";
+    $out .= '    <div class="cand-endorsements-grid">' . "\n";
+
+    foreach ( $items as $item ) {
+        $out .= '      <div class="cand-endorsement">' . "\n";
+        if ( $item['quote'] ) {
+            $out .= '        <p class="cand-endorsement-quote">' . esc_html( $item['quote'] ) . '</p>' . "\n";
+        }
+        $out .= '        <div class="cand-endorsement-name">' . esc_html( $item['name'] ) . '</div>' . "\n";
+        if ( $item['role'] ) {
+            $out .= '        <div class="cand-endorsement-role">' . esc_html( $item['role'] ) . '</div>' . "\n";
+        }
+        $out .= '      </div>' . "\n";
+    }
+
+    $out .= '    </div>' . "\n";
+    $out .= '  </div>' . "\n";
+    $out .= '</section>';
+
+    return $out;
+}
+
+/**
+ * Render social media section — only shows links that have URLs.
+ * Skips empty social profiles instead of rendering dead links.
+ */
+function atp_cand_render_social( $atts = [] ) {
+    $data = atp_cand_get_data();
+
+    $platforms = [
+        'facebook'     => 'Facebook',
+        'twitter_x'    => 'X / Twitter',
+        'instagram'    => 'Instagram',
+        'youtube'      => 'YouTube',
+        'tiktok'       => 'TikTok',
+        'linkedin'     => 'LinkedIn',
+        'social_other' => 'Other',
+    ];
+
+    $links = [];
+    foreach ( $platforms as $key => $label ) {
+        if ( ! empty( $data[ $key ] ) ) {
+            $links[] = [ 'url' => $data[ $key ], 'label' => $label ];
+        }
+    }
+
+    if ( empty( $links ) ) {
+        // No social data — return default template with token replacement
+        $html = atp_demo_get_default( 'atp_cand_social' );
+        return atp_cand_replace_tokens( $html );
+    }
+
+    $out  = '<section class="cand-section cand-section-cream" id="connect">' . "\n";
+    $out .= '  <div class="cand-container">' . "\n";
+    $out .= '    <div class="cand-section-label">Stay Connected</div>' . "\n";
+    $out .= '    <h2 class="cand-section-title">Follow the Campaign</h2>' . "\n";
+    $out .= '    <p class="cand-section-subtitle">Stay up to date on events, policy updates, and ways to get involved.</p>' . "\n";
+    $out .= '    <div class="cand-social">' . "\n";
+
+    foreach ( $links as $link ) {
+        $out .= '      <a href="' . esc_url( $link['url'] ) . '" class="cand-social-link" target="_blank" rel="noopener">' . esc_html( $link['label'] ) . '</a>' . "\n";
+    }
+
+    $out .= '    </div>' . "\n";
+    $out .= '  </div>' . "\n";
+    $out .= '</section>';
+
+    return $out;
+}
 
 /* ─────────────────────────────────────────────────────────────────────────────
    Admin page — Candidate Page Settings
