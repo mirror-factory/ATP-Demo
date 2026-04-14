@@ -64,17 +64,26 @@ function atp_wizard_admin_notice() {
 
 add_action( 'admin_menu', 'atp_wizard_menu' );
 function atp_wizard_menu() {
-    // Only show in menu if setup isn't complete.
-    $parent = get_option( 'atp_setup_complete' ) ? null : 'atp-demo-shortcodes';
-
     add_submenu_page(
-        $parent,
+        'atp-demo-shortcodes',
         'ATP Setup Wizard',
         'Setup Wizard',
         'manage_options',
         'atp-setup-wizard',
         'atp_wizard_render'
     );
+}
+
+// Handle restart wizard action
+add_action( 'admin_init', 'atp_wizard_handle_restart' );
+function atp_wizard_handle_restart() {
+    if ( isset( $_GET['atp_restart_wizard'] ) && $_GET['atp_restart_wizard'] === '1'
+        && current_user_can( 'manage_options' )
+        && isset( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'atp_restart_wizard' ) ) {
+        delete_option( 'atp_setup_complete' );
+        wp_redirect( admin_url( 'admin.php?page=atp-setup-wizard' ) );
+        exit;
+    }
 }
 
 /* ═════════════════════════════════════════════════════════════════════════════
@@ -281,6 +290,17 @@ function atp_wizard_render() {
                     <button class="atp-wiz-btn" onclick="atpWizComplete()" style="font-size:15px;padding:12px 30px">Go to ATP Dashboard</button>
                 </div>
             </div>
+
+            <?php if ( get_option( 'atp_setup_complete' ) ) : ?>
+            <!-- Already completed — show restart option -->
+            <div style="text-align:center;padding:20px 0 0;border-top:1px solid #eee;margin-top:20px">
+                <p style="color:#888;font-size:13px;margin-bottom:10px">Setup was already completed. Want to run it again?</p>
+                <a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=atp-setup-wizard&atp_restart_wizard=1' ), 'atp_restart_wizard' ) ); ?>"
+                   class="atp-wiz-btn secondary" style="text-decoration:none;display:inline-block">
+                    Restart Setup Wizard
+                </a>
+            </div>
+            <?php endif; ?>
 
         </div>
     </div>

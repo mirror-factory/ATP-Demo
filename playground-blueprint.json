@@ -28,8 +28,7 @@
       "step": "setSiteOptions",
       "options": {
         "blogname": "ATP Demo",
-        "blogdescription": "America Tracking Polls — Tier 1 Intake & Candidate Page System",
-        "atp_setup_complete": "1"
+        "blogdescription": "America Tracking Polls — Tier 1 Intake & Candidate Page System"
       }
     },
     {
