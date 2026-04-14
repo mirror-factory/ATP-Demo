@@ -555,8 +555,14 @@ function atp_importer_detect_canvas_template() {
         }
     }
 
-    // No canvas template found — use the default template.
-    return '';
+    // No canvas template found — create one in the active theme.
+    $theme_dir = get_theme_root() . '/' . get_stylesheet();
+    $canvas_file = $theme_dir . '/page-canvas.php';
+    if ( ! file_exists( $canvas_file ) ) {
+        $canvas_php = "<?php\n/* Template Name: Canvas */\nwhile ( have_posts() ) : the_post();\n\tthe_content();\nendwhile;\n";
+        file_put_contents( $canvas_file, $canvas_php );
+    }
+    return 'page-canvas.php';
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
