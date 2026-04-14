@@ -1648,11 +1648,12 @@ html{scroll-behavior:smooth}
 
 /* ── Hero ── */
 .cand-hero{background:var(--navy);padding:80px 0 72px;position:relative;overflow:hidden}
-.cand-hero::before{content:'';position:absolute;top:0;right:0;width:40%;height:100%;background:linear-gradient(135deg,transparent 0%,rgba(230,0,0,.04) 100%)}
-.cand-hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--red) 33%,var(--white) 33% 66%,#3C3B6E 66%)}
-.cand-hero-grid{display:grid;grid-template-columns:1fr 360px;gap:56px;align-items:center;position:relative}
+.cand-hero-bg{position:absolute;inset:0;background:url('https://placehold.co/1920x1080/0B1C33/0B1C33?text=+') center/cover no-repeat;opacity:.25;animation:cand-ken-burns 25s ease-in-out infinite alternate}
+@keyframes cand-ken-burns{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.12) translate(-2%,-1%)}}
+.cand-hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--red) 33%,var(--white) 33% 66%,#3C3B6E 66%);z-index:2}
+.cand-hero-grid{display:grid;grid-template-columns:1fr 360px;gap:56px;align-items:center;position:relative;z-index:1}
 .cand-hero-label{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:14px}
-.cand-hero-title{font-family:var(--font-head);font-size:46px;font-weight:900;line-height:1.12;color:#fff;margin-bottom:18px}
+.cand-hero-title{font-family:var(--font-head);font-size:56px;font-weight:900;line-height:1.08;color:#fff;margin-bottom:20px}
 .cand-hero-intro{font-size:17px;line-height:1.75;color:rgba(255,255,255,.78);margin-bottom:32px;max-width:540px}
 .cand-hero-ctas{display:flex;gap:14px;flex-wrap:wrap}
 .cand-hero-cta{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#fff!important;background:var(--red);padding:14px 28px;border-radius:2px;letter-spacing:.05em;text-transform:uppercase;transition:all .2s;border:none;cursor:pointer}
@@ -1666,7 +1667,8 @@ html{scroll-behavior:smooth}
 .cand-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);text-align:center}
 .cand-stat{padding:32px 16px;border-right:1px solid rgba(255,255,255,.06)}
 .cand-stat:last-child{border-right:none}
-.cand-stat-number{font-family:var(--font-head);font-size:36px;font-weight:900;color:var(--red);line-height:1;margin-bottom:6px}
+.cand-stat-number{font-family:var(--font-head);font-size:36px;font-weight:900;color:#fff;line-height:1;margin-bottom:6px;opacity:0;transform:translateY(10px);transition:opacity .6s,transform .6s}
+.cand-stat-number.visible{opacity:1;transform:translateY(0)}
 .cand-stat-label{font-size:12px;font-weight:500;color:rgba(255,255,255,.55);letter-spacing:.04em;text-transform:uppercase}
 
 /* ── Section foundations ── */
@@ -1698,8 +1700,8 @@ html{scroll-behavior:smooth}
 .cand-message-text{font-size:14px;line-height:1.7;color:var(--text-light)}
 
 /* ── Issues ── */
-.cand-issues-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
-.cand-issue-card{background:var(--white);border:1px solid var(--border);border-top:3px solid var(--navy);border-radius:0 0 4px 4px;padding:28px 24px;transition:box-shadow .2s,transform .2s}
+.cand-issues-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1000px;margin:0 auto}
+.cand-issue-card{background:var(--white);border:1px solid var(--border);border-top:3px solid var(--navy);border-radius:0 0 4px 4px;padding:28px 24px;transition:box-shadow .2s,transform .2s;text-align:left}
 .cand-issue-card:hover{box-shadow:0 8px 24px rgba(0,0,0,.06);transform:translateY(-2px)}
 .cand-issue-tag{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:10px}
 .cand-issue-name{font-family:var(--font-head);font-size:20px;font-weight:700;color:var(--navy);margin-bottom:10px;line-height:1.3}
@@ -1723,15 +1725,20 @@ html{scroll-behavior:smooth}
 .cand-video-caption{text-align:center;margin-top:16px;font-size:13px;color:rgba(255,255,255,.5);font-style:italic}
 
 /* ── Volunteer / Get Involved ── */
-.cand-involve-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.cand-involve-card{background:var(--white);border:1px solid var(--border);border-radius:4px;padding:32px 24px;text-align:center;transition:box-shadow .2s,transform .2s}
-.cand-involve-card:hover{box-shadow:0 8px 24px rgba(0,0,0,.06);transform:translateY(-3px)}
-.cand-involve-icon{width:56px;height:56px;background:rgba(230,0,0,.06);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.cand-section-stripes{background:var(--navy);position:relative;overflow:hidden}
+.cand-section-stripes::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(-45deg,transparent,transparent 28px,rgba(255,255,255,.03) 28px,rgba(255,255,255,.03) 56px)}
+.cand-section-stripes .cand-section-label{color:rgba(255,255,255,.4)}
+.cand-section-stripes .cand-section-title{color:#fff}
+.cand-section-stripes .cand-section-subtitle{color:rgba(255,255,255,.6)}
+.cand-involve-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;position:relative;z-index:1}
+.cand-involve-card{background:rgba(255,255,255,.07);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:32px 24px;text-align:center;transition:box-shadow .2s,transform .2s}
+.cand-involve-card:hover{box-shadow:0 8px 24px rgba(0,0,0,.2);transform:translateY(-3px);background:rgba(255,255,255,.1)}
+.cand-involve-icon{width:56px;height:56px;background:rgba(230,0,0,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
 .cand-involve-icon svg{width:24px;height:24px;stroke:var(--red);stroke-width:2;fill:none}
-.cand-involve-title{font-family:var(--font-head);font-size:18px;font-weight:700;color:var(--navy);margin-bottom:8px}
-.cand-involve-text{font-size:13px;line-height:1.6;color:var(--text-light);margin-bottom:16px}
-.cand-involve-btn{font-size:12px;font-weight:700;color:var(--navy);border:2px solid var(--navy);padding:8px 20px;border-radius:2px;letter-spacing:.04em;text-transform:uppercase;transition:all .2s;display:inline-block}
-.cand-involve-btn:hover{background:var(--navy);color:#fff!important}
+.cand-involve-title{font-family:var(--font-head);font-size:18px;font-weight:700;color:#fff;margin-bottom:8px}
+.cand-involve-text{font-size:13px;line-height:1.6;color:rgba(255,255,255,.65);margin-bottom:16px}
+.cand-involve-btn{font-size:12px;font-weight:700;color:#fff!important;border:2px solid rgba(255,255,255,.3);padding:8px 20px;border-radius:2px;letter-spacing:.04em;text-transform:uppercase;transition:all .2s;display:inline-block}
+.cand-involve-btn:hover{background:#fff;color:var(--navy)!important;border-color:#fff}
 
 /* ── Survey / Typeform ── */
 .cand-survey{text-align:center}
@@ -1751,9 +1758,12 @@ html{scroll-behavior:smooth}
 .cand-donate-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.25)}
 
 /* ── Social ── */
-.cand-social{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
-.cand-social-link{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--navy)!important;background:var(--white);border:1px solid var(--border);padding:12px 22px;border-radius:4px;transition:all .15s}
-.cand-social-link:hover{border-color:var(--red);color:var(--red)!important;transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.04)}
+.cand-social{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.cand-social-link{display:flex;align-items:center;justify-content:center;width:48px;height:48px;background:var(--white);border:1px solid var(--border);border-radius:50%;transition:all .2s}
+.cand-social-link:hover{border-color:var(--red);background:var(--red);transform:translateY(-2px);box-shadow:0 6px 16px rgba(230,0,0,.15)}
+.cand-social-link svg{width:20px;height:20px;fill:var(--navy);transition:fill .2s}
+.cand-social-link:hover svg{fill:#fff}
+.cand-social-sig{font-family:var(--font-head);font-size:28px;font-weight:700;color:var(--navy);font-style:italic;margin-top:24px;letter-spacing:-.01em}
 
 /* ── Footer ── */
 .cand-footer{background:var(--navy);padding:48px 0;text-align:center;border-top:4px solid var(--red)}
@@ -1769,12 +1779,13 @@ html{scroll-behavior:smooth}
 }
 @media(max-width:768px){
   .cand-hero-grid{grid-template-columns:1fr;text-align:center}
-  .cand-hero-title{font-size:32px}
+  .cand-hero-title{font-size:36px}
   .cand-hero-intro{margin-left:auto;margin-right:auto}
   .cand-hero-ctas{justify-content:center}
   .cand-hero-photo{max-width:280px;margin:0 auto}
   .cand-about-grid{grid-template-columns:1fr}
-  .cand-issues-grid,.cand-endorsements-grid{grid-template-columns:1fr}
+  .cand-issues-grid{grid-template-columns:1fr 1fr}
+  .cand-endorsements-grid{grid-template-columns:1fr}
   .cand-nav-links{display:none}
   .cand-nav-toggle{display:block}
   .cand-section{padding:56px 0}
@@ -1832,6 +1843,7 @@ HTML,
 'desc'  => 'Hero with tagline, intro, dual CTAs, and headshot photo. Patriotic stripe at bottom.',
 'default' => <<<'HTML'
 <section class="cand-hero">
+  <div class="cand-hero-bg" style="background-image:url('https://placehold.co/1920x1080/142640/142640?text=+')"></div>
   <div class="cand-container cand-hero-grid">
     <div>
       <div class="cand-hero-label">Republican for County Commissioner &bull; Precinct 4, Rockwall County, Texas</div>
@@ -1960,9 +1972,9 @@ HTML,
 'desc'  => 'Five issue cards with full position text from the John Stacy example intake.',
 'default' => <<<'HTML'
 <section class="cand-section cand-section-cream" id="issues">
-  <div class="cand-container">
+  <div class="cand-container" style="text-align:center">
     <div class="cand-section-label">Where I Stand</div>
-    <h2 class="cand-section-title">Key Issues</h2>
+    <h2 class="cand-section-title" style="margin-left:auto;margin-right:auto">Key Issues</h2>
     <p class="cand-section-subtitle">A full-time commissioner focused on the issues that matter most to Rockwall County families &mdash; roads, taxes, responsible growth, and transparent government.</p>
     <div class="cand-issues-grid">
 
@@ -1985,15 +1997,15 @@ HTML,
       </div>
 
       <div class="cand-issue-card">
-        <div class="cand-issue-tag">Transportation</div>
-        <h3 class="cand-issue-name">Regional Transportation Planning</h3>
-        <p class="cand-issue-desc">I&rsquo;m working to ensure Rockwall County has a strong voice in regional transportation decisions. Our residents deserve real solutions for congestion, not top-down plans that don&rsquo;t reflect local priorities.</p>
-      </div>
-
-      <div class="cand-issue-card">
         <div class="cand-issue-tag">Transparency</div>
         <h3 class="cand-issue-name">Full-Time, Accountable Leadership</h3>
         <p class="cand-issue-desc">I ran on a promise to be a full-time commissioner &mdash; and I&rsquo;ve kept it. Monthly video newsletters, open-door policy, and a Calendly link so any constituent can book time with me directly. That&rsquo;s how government should work.</p>
+      </div>
+
+      <div class="cand-issue-card" style="border-top-color:var(--red)">
+        <div class="cand-issue-tag" style="color:var(--navy)">Community</div>
+        <h3 class="cand-issue-name">Trusted by Leaders</h3>
+        <p class="cand-issue-desc">Endorsed by law enforcement, veterans organizations, community leaders, and the Rockwall County Republican Party. John Stacy has earned the trust of the people who know Precinct 4 best.</p>
       </div>
 
     </div>
@@ -2069,8 +2081,8 @@ HTML,
 'label' => 'Candidate Page — Get Involved',
 'desc'  => 'Volunteer and engagement section with three action cards.',
 'default' => <<<'HTML'
-<section class="cand-section cand-section-cream" id="involved">
-  <div class="cand-container" style="text-align:center">
+<section class="cand-section cand-section-stripes" id="involved">
+  <div class="cand-container" style="text-align:center;position:relative;z-index:1">
     <div class="cand-section-label">Get Involved</div>
     <h2 class="cand-section-title" style="margin-left:auto;margin-right:auto">Join the Campaign</h2>
     <p class="cand-section-subtitle" style="margin-left:auto;margin-right:auto;text-align:center">Every campaign is powered by its community. Here&rsquo;s how you can help John Stacy bring real leadership to Rockwall County.</p>
@@ -2116,11 +2128,7 @@ HTML,
     <h2 class="cand-section-title" style="margin-left:auto;margin-right:auto">Voter Priorities Survey</h2>
     <p class="cand-section-subtitle" style="margin-left:auto;margin-right:auto;text-align:center">Take 2 minutes to share what issues matter most to you and your family in Rockwall County. Your input directly shapes our campaign priorities.</p>
     <div class="cand-survey-embed">
-      <div class="cand-survey-placeholder">
-        <div class="cand-survey-placeholder-title">Share Your Priorities</div>
-        <div class="cand-survey-placeholder-text">Help us understand what matters most to Precinct 4 residents. Your responses are anonymous and take less than 2 minutes.</div>
-        <a href="#" class="cand-survey-placeholder-btn">Take the Survey</a>
-      </div>
+      <iframe src="https://atp.ameritrackpolls.com/to/nhPPYcJ8" style="width:100%;height:520px;border:0;border-radius:8px" loading="lazy"></iframe>
     </div>
   </div>
 </section>
@@ -2154,11 +2162,12 @@ HTML,
     <h2 class="cand-section-title" style="margin-left:auto;margin-right:auto">Follow the Campaign</h2>
     <p class="cand-section-subtitle" style="margin-left:auto;margin-right:auto;text-align:center">Stay up to date on events, policy updates, and ways to get involved in Rockwall County.</p>
     <div class="cand-social">
-      <a href="https://facebook.com/StacyForCommissioner" class="cand-social-link" target="_blank" rel="noopener">Facebook</a>
-      <a href="https://x.com/JohnStacyTX" class="cand-social-link" target="_blank" rel="noopener">X / Twitter</a>
-      <a href="https://instagram.com/stacyforcommissioner" class="cand-social-link" target="_blank" rel="noopener">Instagram</a>
-      <a href="https://linkedin.com/in/johnstacytx" class="cand-social-link" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://facebook.com/johnstacy4rockwallcounty" class="cand-social-link" target="_blank" rel="noopener" title="Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+      <a href="https://x.com/JohnStacyTX" class="cand-social-link" target="_blank" rel="noopener" title="X / Twitter"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+      <a href="https://instagram.com/stacyforcommissioner" class="cand-social-link" target="_blank" rel="noopener" title="Instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.5"/></svg></a>
+      <a href="https://linkedin.com/in/johnstacytx" class="cand-social-link" target="_blank" rel="noopener" title="LinkedIn"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
     </div>
+    <div class="cand-social-sig">John Stacy</div>
   </div>
 </section>
 HTML,
@@ -2182,7 +2191,24 @@ HTML,
   </div>
 </footer>
 <script>
-window.addEventListener('scroll',function(){var d=document.documentElement;var p=(d.scrollTop/(d.scrollHeight-d.clientHeight))*100;var bar=document.getElementById('cand-scroll-progress');if(bar)bar.style.width=p+'%';});
+(function(){
+  // Scroll progress bar
+  window.addEventListener('scroll',function(){var d=document.documentElement;var p=(d.scrollTop/(d.scrollHeight-d.clientHeight))*100;var bar=document.getElementById('cand-scroll-progress');if(bar)bar.style.width=p+'%';});
+  // Stats count-up animation
+  var statsObserved=false;
+  var statsObs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting&&!statsObserved){
+        statsObserved=true;
+        document.querySelectorAll('.cand-stat-number').forEach(function(el,i){
+          setTimeout(function(){el.classList.add('visible');},i*150);
+        });
+      }
+    });
+  },{threshold:0.3});
+  var statsEl=document.querySelector('.cand-stats');
+  if(statsEl)statsObs.observe(statsEl);
+})();
 </script>
 </div><!-- .cand-page -->
 HTML,
