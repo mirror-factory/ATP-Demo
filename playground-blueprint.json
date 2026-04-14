@@ -28,16 +28,13 @@
       "step": "setSiteOptions",
       "options": {
         "blogname": "ATP Demo",
-        "blogdescription": "America Tracking Polls — Tier 1 Intake & Candidate Page System"
+        "blogdescription": "America Tracking Polls — Tier 1 Intake & Candidate Page System",
+        "atp_setup_complete": "1"
       }
     },
     {
       "step": "runPHP",
-      "code": "<?php require '/wordpress/wp-load.php'; $content = '[atp_intake]'; $page_id = wp_insert_post(array('post_title' => 'Candidate Intake Form', 'post_content' => $content, 'post_status' => 'publish', 'post_type' => 'page')); update_post_meta($page_id, '_wp_page_template', 'elementor_canvas'); ?>"
-    },
-    {
-      "step": "runPHP",
-      "code": "<?php require '/wordpress/wp-load.php'; $content = \"[atp_cand_styles]\\n[atp_cand_nav]\\n[atp_cand_hero]\\n[atp_cand_stats]\\n[atp_cand_about]\\n[atp_cand_messages]\\n[atp_cand_issues]\\n[atp_cand_endorsements]\\n[atp_cand_video]\\n[atp_cand_volunteer]\\n[atp_cand_survey]\\n[atp_cand_donate]\\n[atp_cand_social]\\n[atp_cand_footer]\"; $page_id = wp_insert_post(array('post_title' => 'Candidate Landing Page', 'post_content' => $content, 'post_status' => 'publish', 'post_type' => 'page')); ?>"
+      "code": "<?php require '/wordpress/wp-load.php'; $pages = array( array( 'title' => 'ATP Homepage', 'content' => \"[atp_hp_styles]\\n[atp_hp_pollbar]\\n[atp_hp_header]\\n[atp_hp_hero]\\n[atp_hp_about]\\n[atp_hp_survey]\\n[atp_hp_journey]\\n[atp_hp_pipeline]\\n[atp_hp_aeo]\\n[atp_hp_trust]\\n[atp_hp_intake]\\n[atp_hp_footer]\\n[atp_hp_scripts]\", 'kw' => 'polling powered campaign marketing', 'desc' => 'ATP delivers polling powered campaign marketing with synchronized multi-channel solutions for local, statewide, and federal races.' ), array( 'title' => 'Brand Guide', 'content' => \"[atp_brand_styles]\\n[atp_brand_nav]\\n[atp_brand_hero]\\n[atp_brand_bio]\\n[atp_brand_colors]\\n[atp_brand_typography]\\n[atp_brand_logos]\\n[atp_brand_imagery]\\n[atp_brand_animation]\\n[atp_brand_tone]\\n[atp_brand_cta]\\n[atp_brand_footer]\\n[atp_brand_scripts]\", 'kw' => 'america tracking polls brand guide', 'desc' => 'The official America Tracking Polls brand guide.' ), array( 'title' => 'Candidate Intake Form', 'content' => '[atp_intake]', 'kw' => 'candidate intake form', 'desc' => 'Complete the candidate intake form to get started with ATP campaign services.' ), array( 'title' => 'Candidate Landing Page', 'content' => \"[atp_cand_styles]\\n[atp_cand_nav]\\n[atp_cand_hero]\\n[atp_cand_stats]\\n[atp_cand_about]\\n[atp_cand_messages]\\n[atp_cand_issues]\\n[atp_cand_endorsements]\\n[atp_cand_video]\\n[atp_cand_volunteer]\\n[atp_cand_survey]\\n[atp_cand_donate]\\n[atp_cand_social]\\n[atp_cand_footer]\", 'kw' => 'campaign website candidate', 'desc' => 'Official campaign website for John Stacy - County Commissioner, Precinct 4, Rockwall County.' ) ); foreach ($pages as $p) { $pid = wp_insert_post(array( 'post_title' => $p['title'], 'post_content' => $p['content'], 'post_status' => 'publish', 'post_type' => 'page', 'post_author' => 1 )); if (!is_wp_error($pid)) { update_post_meta($pid, '_atp_hide_title', '1'); update_post_meta($pid, '_yoast_wpseo_focuskw', $p['kw']); update_post_meta($pid, '_yoast_wpseo_metadesc', $p['desc']); } } update_option('show_on_front', 'page'); $hp = get_page_by_title('ATP Homepage'); if ($hp) update_option('page_on_front', $hp->ID); ?>"
     }
   ]
 }
