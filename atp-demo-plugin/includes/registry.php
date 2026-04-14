@@ -1610,10 +1610,12 @@ HTML,
 'desc'  => 'Complete CSS for the candidate landing page including all sections: nav, hero, stats, about, messages, issues, endorsements, video, volunteer, donate, social, footer.',
 'default' => <<<'HTML'
 <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <style>
 /* ── Reset & Variables ── */
 html{scroll-behavior:smooth}
-.cand-page,.cand-page *,.cand-page *::before,.cand-page *::after{box-sizing:border-box;margin:0;padding:0}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 .cand-page{
   --navy:#0B1C33;--navy-light:#142640;--red:#E60000;--red-dark:#b30000;
   --cream:#F9F9F7;--white:#FFFFFF;--gold:#C4A84F;
@@ -1625,6 +1627,13 @@ html{scroll-behavior:smooth}
 }
 .cand-page a{color:inherit;text-decoration:none}
 .cand-container{max-width:var(--container);margin:0 auto;padding:0 24px}
+
+/* ── GSAP Reveal ── */
+.cand-reveal{opacity:0;transform:translateY(30px)}
+.cand-reveal-left{opacity:0;transform:translateX(-40px)}
+.cand-reveal-right{opacity:0;transform:translateX(40px)}
+.cand-reveal-scale{opacity:0;transform:scale(.92)}
+.cand-stagger>*{opacity:0;transform:translateY(20px)}
 
 /* ── Scroll Progress ── */
 .cand-progress{position:fixed;top:0;left:0;height:3px;background:var(--red);z-index:9999;transition:width .15s}
@@ -1951,8 +1960,9 @@ HTML,
     <div class="cand-about-grid">
       <div class="cand-about-text">
         <p>John Stacy is a 6th generation Texan and 16-year resident of Fate, Texas. He graduated from TCU with a B.S. in Chemistry and built a successful insurance agency in his hometown &mdash; John Stacy Insurance Services. He and his wife Amie have been married for over 23 years and are raising three sons in Rockwall County.</p>
-        <p>Before running for Commissioner, John served on the Fate City Council, the Economic Development Corporation, and the Planning &amp; Zoning Committee &mdash; building deep experience in the growth and infrastructure challenges facing one of Texas&rsquo;s fastest-growing counties.</p>
-        <p>Since taking office, Commissioner Stacy has stabilized county taxes, ended the diversion of voter-approved road funds, and moved the Trip 21 bond program forward &mdash; including unanimous approval to sell $50 million in road bonds to unlock major congestion-relief projects. He&rsquo;s running for a second term to keep Rockwall County on track.</p>
+        <p>Before running for Commissioner, John served on the Fate City Council, the Economic Development Corporation, the Planning &amp; Zoning Committee, three terms on the Fate Charter Review Committee, and the Rockwall County Historical Commission. He&rsquo;s been Scoutmaster of Troop 163 in Fate and a member of Ridgeview Church since 2009.</p>
+        <p>Since taking office, Commissioner Stacy has stabilized county taxes, ended the diversion of voter-approved road funds, and moved the Trip 21 bond program forward &mdash; including unanimous approval to sell $50 million in road bonds to unlock major congestion-relief projects. He won his first election in 2022 with 61% of the vote and is running for a second term to keep Rockwall County on track.</p>
+        <p>In 2024, John was named <strong>Royse City Hometown Hero</strong> by the Chamber of Commerce. In March 2025, State Representative Katrina Pierson honored him with an official resolution for his dedicated service to Precinct 4. &ldquo;It is both an honor and a privilege to serve the wonderful residents of my precinct,&rdquo; Stacy said.</p>
       </div>
       <div class="cand-credentials">
         <div class="cand-credential">
@@ -1972,8 +1982,16 @@ HTML,
           <div class="cand-credential-value">Married to Amie (23 years), three sons, Ridgeview Church member since 2009</div>
         </div>
         <div class="cand-credential">
+          <div class="cand-credential-label">Awards</div>
+          <div class="cand-credential-value">Royse City Hometown Hero (2024), State Rep. Pierson Resolution (2025)</div>
+        </div>
+        <div class="cand-credential">
           <div class="cand-credential-label">Running For</div>
           <div class="cand-credential-value">Incumbent &mdash; Republican Primary, March 3, 2026</div>
+        </div>
+        <div class="cand-credential">
+          <div class="cand-credential-label">2022 Election</div>
+          <div class="cand-credential-value">Won with 61% of the vote</div>
         </div>
       </div>
     </div>
@@ -2243,27 +2261,100 @@ HTML,
 (function(){
   // Scroll progress bar
   window.addEventListener('scroll',function(){var d=document.documentElement;var p=(d.scrollTop/(d.scrollHeight-d.clientHeight))*100;var bar=document.getElementById('cand-scroll-progress');if(bar)bar.style.width=p+'%';});
-  // Video: show play button again when paused or ended
+
+  // Video player
   var vp=document.getElementById('cand-video-player');
   var vb=document.getElementById('cand-video-play-btn');
   if(vp&&vb){
     vp.addEventListener('ended',function(){vb.style.opacity='1';vb.style.pointerEvents='auto';});
     vp.addEventListener('click',function(){if(!vp.paused){vp.pause();vb.style.opacity='1';vb.style.pointerEvents='auto';}});
   }
-  // Stats count-up animation
-  var statsObserved=false;
-  var statsObs=new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(e.isIntersecting&&!statsObserved){
-        statsObserved=true;
-        document.querySelectorAll('.cand-stat-number').forEach(function(el,i){
-          setTimeout(function(){el.classList.add('visible');},i*150);
-        });
-      }
+
+  // GSAP ScrollTrigger animations
+  if(typeof gsap!=='undefined'&&typeof ScrollTrigger!=='undefined'){
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Reveal animations
+    gsap.utils.toArray('.cand-reveal').forEach(function(el){
+      gsap.to(el,{opacity:1,y:0,duration:.8,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 85%',once:true}});
     });
-  },{threshold:0.3});
-  var statsEl=document.querySelector('.cand-stats');
-  if(statsEl)statsObs.observe(statsEl);
+    gsap.utils.toArray('.cand-reveal-left').forEach(function(el){
+      gsap.to(el,{opacity:1,x:0,duration:.8,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 85%',once:true}});
+    });
+    gsap.utils.toArray('.cand-reveal-right').forEach(function(el){
+      gsap.to(el,{opacity:1,x:0,duration:.8,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 85%',once:true}});
+    });
+    gsap.utils.toArray('.cand-reveal-scale').forEach(function(el){
+      gsap.to(el,{opacity:1,scale:1,duration:.8,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 85%',once:true}});
+    });
+
+    // Stagger children
+    gsap.utils.toArray('.cand-stagger').forEach(function(container){
+      gsap.to(container.children,{opacity:1,y:0,duration:.6,stagger:.12,ease:'power3.out',scrollTrigger:{trigger:container,start:'top 85%',once:true}});
+    });
+
+    // Stats counter
+    gsap.utils.toArray('.cand-stat-number').forEach(function(el,i){
+      gsap.to(el,{opacity:1,y:0,duration:.6,delay:i*.15,ease:'power3.out',scrollTrigger:{trigger:'.cand-stats',start:'top 80%',once:true}});
+    });
+
+    // Hero entrance
+    gsap.from('.cand-hero-label',{opacity:0,y:20,duration:.6,delay:.2,ease:'power3.out'});
+    gsap.from('.cand-hero-title',{opacity:0,y:30,duration:.8,delay:.4,ease:'power3.out'});
+    gsap.from('.cand-hero-intro',{opacity:0,y:20,duration:.6,delay:.6,ease:'power3.out'});
+    gsap.from('.cand-hero-ctas',{opacity:0,y:20,duration:.6,delay:.8,ease:'power3.out'});
+    gsap.from('.cand-hero-photo',{opacity:0,scale:.9,duration:1,delay:.5,ease:'power3.out'});
+
+    // Issue cards stagger
+    gsap.utils.toArray('.cand-issues-grid').forEach(function(grid){
+      gsap.to(grid.querySelectorAll('.cand-issue-card'),{opacity:1,y:0,duration:.5,stagger:.1,ease:'power3.out',scrollTrigger:{trigger:grid,start:'top 80%',once:true}});
+    });
+    document.querySelectorAll('.cand-issue-card').forEach(function(c){c.style.opacity='0';c.style.transform='translateY(20px)';});
+
+    // Endorsement cards
+    gsap.utils.toArray('.cand-endorsements-grid').forEach(function(grid){
+      gsap.to(grid.querySelectorAll('.cand-endorsement'),{opacity:1,y:0,duration:.5,stagger:.1,ease:'power3.out',scrollTrigger:{trigger:grid,start:'top 80%',once:true}});
+    });
+    document.querySelectorAll('.cand-endorsement').forEach(function(c){c.style.opacity='0';c.style.transform='translateY(20px)';});
+
+    // Message cards
+    gsap.utils.toArray('.cand-messages-grid').forEach(function(grid){
+      gsap.to(grid.querySelectorAll('.cand-message'),{opacity:1,y:0,duration:.6,stagger:.15,ease:'power3.out',scrollTrigger:{trigger:grid,start:'top 80%',once:true}});
+    });
+    document.querySelectorAll('.cand-message').forEach(function(c){c.style.opacity='0';c.style.transform='translateY(20px)';});
+
+    // Involve cards
+    gsap.utils.toArray('.cand-involve-grid').forEach(function(grid){
+      gsap.to(grid.querySelectorAll('.cand-involve-card'),{opacity:1,y:0,duration:.5,stagger:.12,ease:'power3.out',scrollTrigger:{trigger:grid,start:'top 80%',once:true}});
+    });
+    document.querySelectorAll('.cand-involve-card').forEach(function(c){c.style.opacity='0';c.style.transform='translateY(20px)';});
+
+    // Video section
+    gsap.from('.cand-video-wrap',{opacity:0,scale:.9,duration:1,ease:'power3.out',scrollTrigger:{trigger:'.cand-video-wrap',start:'top 80%',once:true}});
+
+    // About section
+    var aboutText=document.querySelector('.cand-about-text');
+    var aboutCreds=document.querySelector('.cand-credentials');
+    if(aboutText)gsap.from(aboutText,{opacity:0,x:-30,duration:.8,ease:'power3.out',scrollTrigger:{trigger:aboutText,start:'top 80%',once:true}});
+    if(aboutCreds)gsap.from(aboutCreds,{opacity:0,x:30,duration:.8,delay:.2,ease:'power3.out',scrollTrigger:{trigger:aboutCreds,start:'top 80%',once:true}});
+
+    // Section titles
+    gsap.utils.toArray('.cand-section-label').forEach(function(el){
+      gsap.from(el,{opacity:0,y:10,duration:.5,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 90%',once:true}});
+    });
+    gsap.utils.toArray('.cand-section-title').forEach(function(el){
+      gsap.from(el,{opacity:0,y:15,duration:.6,delay:.1,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%',once:true}});
+    });
+
+    // Donate CTA
+    gsap.from('.cand-donate-btn',{opacity:0,y:20,duration:.6,ease:'power3.out',scrollTrigger:{trigger:'.cand-donate-btn',start:'top 85%',once:true}});
+
+    // Social icons
+    gsap.utils.toArray('.cand-social').forEach(function(el){
+      gsap.to(el.children,{opacity:1,y:0,duration:.4,stagger:.08,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 85%',once:true}});
+    });
+    document.querySelectorAll('.cand-social-link').forEach(function(c){c.style.opacity='0';c.style.transform='translateY(10px)';});
+  }
 })();
 </script>
 </div><!-- .cand-page -->
