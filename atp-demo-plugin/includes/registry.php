@@ -1757,6 +1757,28 @@ html{scroll-behavior:smooth}
 .cand-donate-btn{display:inline-flex;align-items:center;gap:8px;font-size:16px;font-weight:700;color:var(--navy)!important;background:#fff;padding:18px 48px;border-radius:2px;letter-spacing:.05em;text-transform:uppercase;transition:all .2s;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.15)}
 .cand-donate-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.25)}
 
+/* ── Legal / Policy Pages ── */
+.cand-legal{background:var(--white);padding:80px 0 60px}
+.cand-legal-container{max-width:760px;margin:0 auto;padding:0 24px}
+.cand-legal-meta{font-size:12px;color:var(--text-muted);margin-bottom:24px;line-height:1.6}
+.cand-legal h1{font-family:var(--font-head);font-size:32px;font-weight:700;color:var(--navy);margin-bottom:8px;line-height:1.2}
+.cand-legal h2{font-family:var(--font-head);font-size:20px;font-weight:700;color:var(--navy);margin:32px 0 10px;padding-top:16px;border-top:1px solid var(--border)}
+.cand-legal h3{font-size:15px;font-weight:700;color:var(--navy);margin:20px 0 8px}
+.cand-legal p{font-size:15px;line-height:1.8;color:var(--text);margin-bottom:12px}
+.cand-legal ul,.cand-legal ol{margin:8px 0 16px 24px;font-size:15px;line-height:1.8;color:var(--text)}
+.cand-legal li{margin-bottom:4px}
+.cand-legal a{color:var(--red);text-decoration:underline}
+.cand-legal strong{color:var(--navy)}
+
+/* ── Issues Page ── */
+.cand-issues-page-card{background:var(--white);border:1px solid var(--border);border-radius:4px;margin-bottom:24px;overflow:hidden}
+.cand-issues-page-header{background:var(--navy);padding:20px 28px}
+.cand-issues-page-header h3{font-family:var(--font-head);font-size:22px;font-weight:700;color:#fff;margin:0}
+.cand-issues-page-body{padding:24px 28px}
+.cand-issues-page-body p{font-size:15px;line-height:1.8;color:var(--text);margin-bottom:12px}
+.cand-issues-page-body p:last-child{margin-bottom:0}
+.cand-issues-page-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--red);background:rgba(230,0,0,.06);padding:3px 10px;border-radius:2px;margin-bottom:12px}
+
 /* ── Social ── */
 .cand-social{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
 .cand-social-link{display:flex;align-items:center;justify-content:center;width:48px;height:48px;background:var(--white);border:1px solid var(--border);border-radius:50%;transition:all .2s}
@@ -2220,6 +2242,216 @@ HTML,
 })();
 </script>
 </div><!-- .cand-page -->
+HTML,
+],
+
+[
+'tag'   => 'atp_cand_issues_page',
+'label' => 'Candidate Page — Issues & Answers (Full Page)',
+'desc'  => 'Standalone issues page with detailed policy positions. Uses real John Stacy content from commissionerjohnstacy.com/issues-answers/.',
+'default' => <<<'HTML'
+<section class="cand-section cand-section-light">
+  <div class="cand-container" style="max-width:860px">
+    <div class="cand-section-label">Issues &amp; Answers</div>
+    <h2 class="cand-section-title">Where Commissioner Stacy Stands</h2>
+    <p class="cand-section-subtitle">Four key issues currently being addressed by the Rockwall County Commissioner&rsquo;s Court &mdash; and what Commissioner Stacy is doing about them.</p>
+
+    <div class="cand-issues-page-card">
+      <div class="cand-issues-page-header"><h3>Growth &amp; Development Accountability</h3></div>
+      <div class="cand-issues-page-body">
+        <div class="cand-issues-page-tag">Protecting Taxpayers</div>
+        <p>Rockwall County is one of the fastest-growing counties in Texas, and that growth must be managed responsibly. Commissioner Stacy is focused on holding developers accountable for Municipal Utility Districts (MUDs) outside city limits &mdash; ensuring new development pays its fair share of infrastructure costs rather than shifting the burden to existing taxpayers.</p>
+        <p>&ldquo;Responsible development means real water, real infrastructure, and real planning,&rdquo; Stacy said. &ldquo;Rockwall County should grow on our terms &mdash; with safety, roads, and taxpayers in mind &mdash; not on the developers&rsquo; timetable.&rdquo;</p>
+      </div>
+    </div>
+
+    <div class="cand-issues-page-card">
+      <div class="cand-issues-page-header"><h3>Trip 21 Road Bond Program</h3></div>
+      <div class="cand-issues-page-body">
+        <div class="cand-issues-page-tag">$150M Voter-Approved Bonds</div>
+        <p>In November 2021, voters approved a $150 million road bond with 26 listed projects. Commissioner Stacy ended the diversion of voter-approved road funds and worked to move the program forward. Even before new bond funds were issued, 11 of the 26 projects began engineering and preliminary work using $57 million in leftover funds from the 2004 and 2008 bond programs.</p>
+        <p>On November 12, 2025, the Court took action to issue $50 million in new Trip 21 funding &mdash; allowing 23 of the 26 projects to now move forward. This is an aggressive and proactive effort to prepare as many projects as possible for state and federal partners to help construct.</p>
+      </div>
+    </div>
+
+    <div class="cand-issues-page-card">
+      <div class="cand-issues-page-header"><h3>Regional Transportation</h3></div>
+      <div class="cand-issues-page-body">
+        <div class="cand-issues-page-tag">Protecting Local Control</div>
+        <p>Commissioner Stacy is working to ensure Rockwall County has a strong voice in regional transportation decisions, coordinating with state and federal agencies on the proposed outer loop and other major projects. Local residents deserve real solutions for congestion that reflect their priorities &mdash; not top-down plans from outside interests.</p>
+      </div>
+    </div>
+
+    <div class="cand-issues-page-card">
+      <div class="cand-issues-page-header"><h3>Local Road Construction</h3></div>
+      <div class="cand-issues-page-body">
+        <div class="cand-issues-page-tag">Building What Citizens Need</div>
+        <p>Beyond the bond program, Commissioner Stacy is focused on the actual construction of roads demanded by county residents. This includes coordinating with TxDOT, managing county road maintenance, and ensuring that road projects are delivered on time and on budget. The goal is simple: build the roads citizens urgently need.</p>
+      </div>
+    </div>
+
+    <div class="cand-issues-page-card" style="border-top:3px solid var(--red)">
+      <div class="cand-issues-page-header" style="background:var(--red)"><h3>Full-Time, Accountable Leadership</h3></div>
+      <div class="cand-issues-page-body">
+        <div class="cand-issues-page-tag">Transparency</div>
+        <p>Commissioner Stacy ran on a promise to be a full-time commissioner and has kept it. He publishes a monthly video newsletter, maintains an open-door policy, and offers a Calendly link so any constituent can book time directly. He took 61% of the vote running on a record of protecting taxpayers and standing up to aggressive development.</p>
+        <p>After three years of stabilizing county taxes, advancing long-delayed road projects, and standing firm for responsible growth, Commissioner Stacy has outlined a focused four-year plan to keep Rockwall County moving forward &mdash; without surrendering control to outside developer interests.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+HTML,
+],
+
+[
+'tag'   => 'atp_cand_privacy',
+'label' => 'Candidate Page — Privacy Policy',
+'desc'  => 'Full privacy policy page. Edit the candidate name, committee name, contact email, phone, and address fields to customize for each candidate.',
+'default' => <<<'HTML'
+<section class="cand-legal">
+  <div class="cand-legal-container">
+    <h1>Privacy Policy</h1>
+    <div class="cand-legal-meta">
+      Effective Date: December 9, 2025<br>
+      Authorized by: John Stacy for Rockwall County Commissioner Precinct 4
+    </div>
+
+    <h2>1. Introduction</h2>
+    <p>John Stacy for Rockwall County Commissioner Precinct 4 respects your privacy. This Policy explains how we collect, use, and protect your information when you visit our website, sign up for updates, donate, volunteer, or receive text messages from us.</p>
+
+    <h2>2. Information We Collect</h2>
+    <ul>
+      <li><strong>Contact Information:</strong> name, email address, phone number, mailing address.</li>
+      <li><strong>Automatically Collected Data:</strong> IP address, device and browser information, pages visited, referral URLs, and general location (via analytics/cookies).</li>
+      <li><strong>Survey/Engagement Data:</strong> responses to campaign surveys, event RSVPs, volunteer interests.</li>
+      <li><strong>Donation Data:</strong> amount, date, and payment method details processed by our payment processor (we do not store full payment card numbers).</li>
+    </ul>
+
+    <h2>3. How We Use Information</h2>
+    <ul>
+      <li>Provide updates, alerts, event information, and volunteer opportunities.</li>
+      <li>Respond to questions and support requests.</li>
+      <li>Improve our website and communications.</li>
+      <li>Comply with applicable campaign finance and other legal requirements.</li>
+    </ul>
+    <p>We do not sell, rent, or trade your personal information.</p>
+
+    <h2>4. Text Messaging (SMS/MMS)</h2>
+    <p>By providing your mobile number, you consent to receive recurring campaign messages, updates, and notifications via SMS/MMS. Message frequency may vary. Message and data rates may apply.</p>
+    <ul>
+      <li><strong>Opt Out:</strong> Reply STOP to end all texts.</li>
+      <li><strong>Help:</strong> Reply HELP or contact us at info@commissionerjohnstacy.com or (469) 939-2067.</li>
+      <li><strong>Consent Not Required:</strong> You do not need to consent to receive texts to donate or volunteer.</li>
+      <li><strong>Data Use:</strong> Your number is used only for campaign communications and is not shared with unauthorized third parties.</li>
+    </ul>
+    <p>By enrolling, you confirm you are the account holder or have permission to enroll the number provided.</p>
+
+    <h2>5. Cookies and Tracking</h2>
+    <p>We use cookies and analytics tools to operate the site, personalize content, and measure engagement. You can adjust cookie settings in your browser; disabling cookies may affect site functionality.</p>
+
+    <h2>6. Data Security</h2>
+    <p>We use industry-standard safeguards to protect your information. However, no method of transmission or storage is 100% secure, and we cannot guarantee absolute security.</p>
+
+    <h2>7. Children&rsquo;s Privacy</h2>
+    <p>Our website and text services are not intended for children under 13, and we do not knowingly collect data from children under 13.</p>
+
+    <h2>8. Policy Updates</h2>
+    <p>We may update this Policy from time to time. The latest version will be posted here with the effective date above.</p>
+
+    <h2>9. Contact Us</h2>
+    <p>
+      John Stacy for Rockwall County Commissioner Precinct 4<br>
+      101 East Rusk St.<br>
+      Rockwall, TX 75087<br>
+      Email: <a href="mailto:info@commissionerjohnstacy.com">info@commissionerjohnstacy.com</a><br>
+      Phone: <a href="tel:+14699392067">(469) 939-2067</a>
+    </p>
+  </div>
+</section>
+HTML,
+],
+
+[
+'tag'   => 'atp_cand_cookies',
+'label' => 'Candidate Page — Cookie, Tracking & TCPA Policy',
+'desc'  => 'Full cookie/tracking/DLC10/TCPA policy page. Edit candidate name, committee, contact info to customize.',
+'default' => <<<'HTML'
+<section class="cand-legal">
+  <div class="cand-legal-container">
+    <h1>Cookie, Tracking, and DLC10 / TCPA Policy</h1>
+    <div class="cand-legal-meta">
+      For Commissioner John Stacy | Rockwall County, Texas<br>
+      Effective Date: 12/09/2025 &bull; Last Updated: 12/09/2025
+    </div>
+
+    <p>Commissioner John Stacy (&ldquo;we,&rdquo; &ldquo;our,&rdquo; or &ldquo;us&rdquo;) is committed to transparency regarding how this website collects, uses, and stores information. This Cookie &amp; Tracking Policy explains how cookies, pixels, analytics tools, and communication technologies&mdash;including SMS/MMS systems covered under the Telephone Consumer Protection Act (TCPA) and 10DLC (DLC10) standards&mdash;operate when you visit or interact with this website.</p>
+    <p>By using this website, you consent to the use of cookies and tracking technologies as described in this Policy.</p>
+
+    <h2>1. What Are Cookies?</h2>
+    <p>Cookies are small text files placed on your computer or mobile device to store information about your browsing activity. Cookies may be:</p>
+    <ul>
+      <li><strong>Session cookies,</strong> which are deleted when you close your browser;</li>
+      <li><strong>Persistent cookies,</strong> which remain until you delete them or they expire;</li>
+      <li><strong>First-party cookies,</strong> which are placed by this website;</li>
+      <li><strong>Third-party cookies,</strong> which are placed by service providers such as analytics or advertising platforms.</li>
+    </ul>
+    <p>We use cookies to improve website performance, deliver relevant content, enhance security, and understand how visitors interact with our pages.</p>
+
+    <h2>2. Types of Cookies We Use</h2>
+    <h3>A. Strictly Necessary Cookies</h3>
+    <p>These cookies are required for the site to function properly and cannot be disabled. They are used for security, authentication, load balancing, form submissions, and basic navigation.</p>
+    <h3>B. Performance and Analytics Cookies</h3>
+    <p>These cookies help us measure traffic and improve user experience. They may be provided by tools such as Google Analytics, Meta Pixel, or similar services. Information collected may include IP address, browser type, device type, referring URLs, pages visited, and date/time of visits. This data is generally aggregated and used for statistical purposes.</p>
+    <h3>C. Functionality Cookies</h3>
+    <p>These cookies enhance your experience by remembering your preferences, language settings, form values, or returning visitor recognition.</p>
+    <h3>D. Advertising and Retargeting Cookies</h3>
+    <p>If advertising, retargeting, or social media integrations are enabled, these cookies may measure engagement with campaign content, track visits after clicking advertisements, and understand which messages or pages are most effective.</p>
+
+    <h2>3. DLC10 and TCPA Compliance for SMS/MMS Communications</h2>
+    <p>Although cookies primarily relate to web browsing, this website may also collect and store information in connection with SMS/MMS communications sent via registered 10DLC routes. We comply with the Telephone Consumer Protection Act (TCPA), Federal Communications Commission (FCC) rules, CTIA guidelines, and 10DLC (DLC10) registration and vetting requirements.</p>
+    <p>We only send SMS/MMS messages when:</p>
+    <ul>
+      <li>You have provided express written consent to receive messages, and</li>
+      <li>You understand that messaging and data rates may apply, and</li>
+      <li>You may opt out at any time by replying &ldquo;STOP&rdquo; or using another designated opt-out method, and</li>
+      <li>Your consent is not a condition of receiving county services or assistance.</li>
+    </ul>
+    <p>If you provide your phone number through forms, surveys, QR codes, or other digital tools on this website, we may use cookies and tracking technologies to record your opt-in and consent status, store date/time of consent for compliance purposes, measure engagement with links shared via SMS/MMS, and improve the relevance and timing of messages.</p>
+    <p>We do not sell or share your telephone number with third parties for their own marketing purposes.</p>
+
+    <h2>4. Additional Technologies Used</h2>
+    <h3>A. Tracking Pixels and Event Tags</h3>
+    <p>We may use tracking pixels, tags, or scripts from providers such as Google, Meta, or other platforms to measure page views, engagement, traffic sources, referral paths, and conversions related to campaign goals.</p>
+    <h3>B. Server Log Data</h3>
+    <p>Our servers may automatically collect limited technical information including IP address, browser type, device type, date and time of access, pages viewed, and error codes.</p>
+    <h3>C. Third-Party Integrations</h3>
+    <p>Our website may integrate with third-party services such as survey/form tools, email/SMS delivery services, security providers, and embedded video or social media analytics. Each third party maintains its own privacy and cookie policies.</p>
+
+    <h2>5. How You Can Control Cookies</h2>
+    <p>You can manage cookies through your browser settings. Most browsers allow you to delete existing cookies, block some or all cookies, enable tracking protection or &ldquo;Do Not Track&rdquo; settings, receive alerts when a site tries to place a cookie, and use private or incognito browsing modes. Disabling certain cookies may affect the functionality and performance of this website.</p>
+
+    <h2>6. Data Retention</h2>
+    <p>We retain cookie and tracking data only for as long as necessary to fulfill operational, analytical, or legal requirements. SMS/MMS opt-in records required by TCPA, carrier rules, or DLC10 standards are retained for the periods needed to demonstrate compliance.</p>
+
+    <h2>7. How We Protect Your Information</h2>
+    <p>We use reasonable administrative, technical, and physical safeguards to help protect information collected through this website, including SSL encryption, access controls, secure hosting, regular system updates, and vendor review with contractual safeguards. We do not sell personal data to third parties.</p>
+
+    <h2>8. Your Rights</h2>
+    <p>Depending on your location, you may have the right to request access to the information we hold about you, request correction or deletion of certain information, opt out of certain cookies or tracking technologies, and withdraw consent to receive SMS, MMS, or email communications.</p>
+
+    <h2>9. Updates to This Policy</h2>
+    <p>We may update this Cookie, Tracking, and DLC10 / TCPA Policy periodically to reflect changes in technology, law, or our practices. When we do, we will revise the &ldquo;Effective Date&rdquo; at the top of this page.</p>
+
+    <h2>10. Contact Information</h2>
+    <p>
+      Commissioner John Stacy<br>
+      Rockwall County, Texas<br>
+      Email: <a href="mailto:info@commissionerjohnstacy.com">info@commissionerjohnstacy.com</a><br>
+      Phone: <a href="tel:+14699392067">(469) 939-2067</a>
+    </p>
+  </div>
+</section>
 HTML,
 ],
 

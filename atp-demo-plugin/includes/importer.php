@@ -106,6 +106,45 @@ function atp_importer_page_sets() {
             'focus_kw'    => 'campaign website candidate',
             'meta_desc'   => 'Official campaign website — learn about the candidate, key issues, endorsements, and how to support the campaign.',
         ],
+        'candidate-issues' => [
+            'title'       => 'Issues & Answers',
+            'desc'        => 'Detailed policy positions page with expandable issue cards.',
+            'color'       => '#0B1C33',
+            'shortcodes'  => [
+                '[atp_cand_styles]',
+                '[atp_cand_nav]',
+                '[atp_cand_issues_page]',
+                '[atp_cand_footer]',
+            ],
+            'focus_kw'    => 'john stacy issues rockwall county',
+            'meta_desc'   => 'Where Commissioner John Stacy stands on growth, roads, taxes, and responsible development in Rockwall County.',
+        ],
+        'candidate-privacy' => [
+            'title'       => 'Privacy Policy',
+            'desc'        => 'Campaign privacy policy with SMS/TCPA compliance.',
+            'color'       => '#555555',
+            'shortcodes'  => [
+                '[atp_cand_styles]',
+                '[atp_cand_nav]',
+                '[atp_cand_privacy]',
+                '[atp_cand_footer]',
+            ],
+            'focus_kw'    => 'privacy policy campaign',
+            'meta_desc'   => 'Privacy policy for John Stacy for Rockwall County Commissioner Precinct 4.',
+        ],
+        'candidate-cookies' => [
+            'title'       => 'Cookie & TCPA Policy',
+            'desc'        => 'Cookie, tracking, DLC10 and TCPA compliance policy.',
+            'color'       => '#555555',
+            'shortcodes'  => [
+                '[atp_cand_styles]',
+                '[atp_cand_nav]',
+                '[atp_cand_cookies]',
+                '[atp_cand_footer]',
+            ],
+            'focus_kw'    => 'cookie policy TCPA DLC10',
+            'meta_desc'   => 'Cookie, tracking, and TCPA/DLC10 policy for Commissioner John Stacy website.',
+        ],
     ];
 }
 
