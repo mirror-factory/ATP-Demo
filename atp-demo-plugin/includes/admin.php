@@ -50,44 +50,6 @@ function atp_demo_admin_page() {
     // ── Page Setup Definitions ─────────────────────────────────────────────────
     // Three page sets — copy all shortcodes for a full page in one click.
     $page_sets = [
-        'ATP Homepage' => [
-            'desc'  => 'Full marketing homepage with hero, survey simulation, pipeline, AEO, and footer.',
-            'color' => '#0B1C33',
-            'tags'  => [
-                '[atp_hp_styles]',
-                '[atp_hp_pollbar]',
-                '[atp_hp_header]',
-                '[atp_hp_hero]',
-                '[atp_hp_about]',
-                '[atp_hp_survey]',
-                '[atp_hp_journey]',
-                '[atp_hp_pipeline]',
-                '[atp_hp_aeo]',
-                '[atp_hp_trust]',
-                '[atp_hp_intake]',
-                '[atp_hp_footer]',
-                '[atp_hp_scripts]',
-            ],
-        ],
-        'Brand Guide' => [
-            'desc'  => 'Full brand guide with bio, colors, typography, logos, photography, tone, and CTAs.',
-            'color' => '#B22234',
-            'tags'  => [
-                '[atp_brand_styles]',
-                '[atp_brand_nav]',
-                '[atp_brand_hero]',
-                '[atp_brand_bio]',
-                '[atp_brand_colors]',
-                '[atp_brand_typography]',
-                '[atp_brand_logos]',
-                '[atp_brand_imagery]',
-                '[atp_brand_animation]',
-                '[atp_brand_tone]',
-                '[atp_brand_cta]',
-                '[atp_brand_footer]',
-                '[atp_brand_scripts]',
-            ],
-        ],
         'Candidate Intake Form' => [
             'desc'  => 'The ATP candidate onboarding form. 16-step intake with three-condition branching (A/B/C). Saves to Candidates admin.',
             'color' => '#2E2D5A',
@@ -236,8 +198,7 @@ function atp_demo_admin_page() {
                         <span class="atp-sc-label">ATP Candidate Intake Form</span>
                     </div>
                     <p class="atp-sc-desc">
-                        16-step candidate onboarding form with three-condition branching. Saves submissions as CPT posts, sends email notifications.
-                        Configure at <strong>ATP Candidates → Settings</strong>.
+                        16-step candidate onboarding form. Saves submissions as posts, sends email notifications.
                     </p>
                     <div class="atp-sc-tag-row">
                         <code class="atp-sc-tag atp-copy-btn" data-copy="[atp_intake]" title="Click to copy">[atp_intake]</code>
@@ -245,8 +206,8 @@ function atp_demo_admin_page() {
                     </div>
                 </div>
                 <div style="padding:16px 20px;background:#f9f7f5;border-top:1px solid #e5e5e5;font-size:13px;color:#555;line-height:1.6">
-                    The <code>[atp_intake]</code> shortcode is managed via <a href="<?php echo esc_url( admin_url('admin.php?page=atp-candidates') ); ?>">ATP Candidates</a>.
-                    To edit questions, branding, or notification emails go to
+                    Manage at <a href="<?php echo esc_url( admin_url('admin.php?page=atp-candidates') ); ?>">ATP Candidates</a>.
+                    Edit questions, branding, or notifications at
                     <a href="<?php echo esc_url( admin_url('admin.php?page=atp-settings') ); ?>">ATP Candidates → Settings</a>.
                 </div>
             </div>
