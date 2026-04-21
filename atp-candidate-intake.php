@@ -113,7 +113,7 @@ function atp_default_questions(){return[
 /* ── Step 9 — Survey Page ── */
 ['id'=>'q9','section'=>'09 — Survey Page','question'=>'Set up your website survey','subtitle'=>'This adds a voter engagement survey to your campaign site. ATP handles survey design and delivery.','fields'=>[
     ['id'=>'survey_page_wanted','label'=>'Include a survey page on your website?','type'=>'radio','placeholder'=>'','optional'=>false,'options'=>['Yes — include a survey page','No — skip for now']],
-    ['id'=>'primary_survey_focus','label'=>'Primary survey focus','type'=>'select','placeholder'=>'','optional'=>true,'options'=>['Overall candidate impression','Issue priorities & positions','Messaging & communications feedback','Likelihood to vote & support','Volunteer & grassroots feedback','Website & digital experience'],'cond'=>'cond-survey'],
+    ['id'=>'primary_survey_focus','label'=>'Primary survey focus','type'=>'select','placeholder'=>'','optional'=>true,'options'=>['Overall candidate impression','Issue priorities & positions','Messaging & communications feedback','Likelihood to vote & support','Volunteer & grassroots feedback','Website & digital experience'],'cond'=>'cond-survey','helper'=>'<strong>Overall candidate impression</strong> — Tracks favorability, trust, and support intensity<br><strong>Issue priorities &amp; positions</strong> — What to emphasize in messaging and which policies to feature<br><strong>Messaging &amp; communications feedback</strong> — Guides spend and channel mix; tests slogans before scaling<br><strong>Likelihood to vote &amp; support</strong> — Segment into supporters, persuadables, and GOTV targets<br><strong>Volunteer &amp; grassroots feedback</strong> — Improves events and field operations<br><strong>Website &amp; digital experience</strong> — Improves site clarity and conversion paths'],
     ['id'=>'survey_page_label','label'=>'What should the page be called?','type'=>'select','placeholder'=>'','optional'=>true,'options'=>['Survey','Share Feedback','Voter Priorities','Community Input','Custom (enter below)'],'cond'=>'cond-survey'],
     ['id'=>'survey_page_label_custom','label'=>'Custom page label','type'=>'text','placeholder'=>'Enter custom page name...','optional'=>true,'cond'=>'cond-survey'],
     ['id'=>'survey_display','label'=>'Survey placement','type'=>'select','placeholder'=>'','optional'=>true,'options'=>['Dedicated page only','Homepage section only','Both dedicated page and homepage section'],'cond'=>'cond-survey'],
@@ -573,8 +573,9 @@ body.admin-bar .apg{top:89px}
 #atpr textarea{resize:vertical;min-height:100px;line-height:1.6}
 .ao{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.05em;color:var(--w6);border:1px solid var(--w2);border-radius:3px;padding:1px 6px;margin-left:6px;vertical-align:middle}
 .ach{display:flex;flex-direction:column;gap:9px}
-.ac{display:flex;align-items:flex-start;gap:13px;padding:14px 17px;border:1px solid var(--w2);border-radius:6px;cursor:pointer;background:var(--w1);transition:border-color .2s,background .2s;user-select:none}
-.ac:hover{border-color:rgba(212,43,43,.5);background:rgba(212,43,43,.06)}
+.ac{display:flex;align-items:flex-start;gap:13px;padding:14px 17px;border:1px solid var(--w2);border-radius:6px;cursor:pointer;background:var(--w1);transition:border-color .2s,background .2s;user-select:none;opacity:.65}
+.ac:hover{border-color:rgba(212,43,43,.5);background:rgba(212,43,43,.06);opacity:1}
+.ac.sel{opacity:1}
 .ac.sel{border-color:var(--rd);background:rgba(212,43,43,.13)}
 .ack{font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:.06em;color:var(--w6);border:1px solid var(--w2);border-radius:3px;padding:3px 8px;min-width:26px;text-align:center;flex-shrink:0;transition:all .15s}
 .ac.sel .ack{border-color:var(--rd);color:var(--rd)}
@@ -668,9 +669,10 @@ body.admin-bar .apg{top:89px}
         <div class="aki" onclick="AK(this)"><div class="akb"><svg viewBox="0 0 10 8" fill="none"><polyline points="1,4 4,7 9,1" stroke="white" stroke-width="1.5"/></svg></div><div><div class="acl"><?=esc_html($o)?></div><?php if(!empty($descs[$oi])):?><div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:2px;line-height:1.4"><?=esc_html($descs[$oi])?></div><?php endif;?></div></div>
         <?php endforeach;?>
       </div>
-    <?php elseif($tp==='select'):?>
+    <?php elseif($tp==='select'):$helper=$f['helper']??'';?>
       <div class="afc"><?php if($lbl):?><label class="afl" for="<?=$fid?>"><?=$lbl?><?php if($opt):?><span class="ao">optional</span><?php endif;?></label><?php endif;?>
         <select id="<?=$fid?>"><option value="">Select</option><?php foreach($opts as $o):?><option><?=esc_html($o)?></option><?php endforeach;?></select>
+        <?php if($helper):?><div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:8px;line-height:1.6"><?=$helper?></div><?php endif;?>
       </div>
     <?php elseif($tp==='textarea'):?>
       <div class="afc"><?php if($lbl):?><label class="afl" for="<?=$fid?>"><?=$lbl?><?php if($opt):?><span class="ao">optional</span><?php endif;?></label><?php endif;?>
@@ -793,8 +795,17 @@ function CV(){
   shAll('cond-rebuild',eq('domain_status','I have an existing website to replace or rebuild'));
   // Step 14: referral specify
   shAll('cond-referral-other',eq('referral_source','Other'));
-  // Step 15: Section C only if survey page wanted
-  sh('cond-survey-focuses',yes('survey_page_wanted'));
+  // Step 15: Section C only if survey page wanted, and filter out selected primary focus
+  var surveyYes=yes('survey_page_wanted');
+  shAll('cond-survey-focuses',surveyYes);
+  if(surveyYes){
+    var pf=D.primary_survey_focus||'';
+    var sfGroup=document.querySelector('#ak_additional_survey_focuses');
+    if(sfGroup){sfGroup.querySelectorAll('.aki').forEach(function(item){
+      var label=item.querySelector('.acl');
+      if(label)item.style.display=(label.textContent.trim()===pf)?'none':'';
+    });}
+  }
 }
 document.addEventListener('change',function(e){if(e.target.tagName==='SELECT')CV();});
 CV();
