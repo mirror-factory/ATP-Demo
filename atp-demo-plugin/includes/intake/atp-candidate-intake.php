@@ -186,7 +186,7 @@ function atp_default_questions(){return[
     ['id'=>'additional_survey_focuses','label'=>'Additional Survey Focuses','type'=>'checkbox','placeholder'=>'Want deeper voter insight? Add a survey focused on a different dimension.','optional'=>true,'options'=>['Overall candidate impression','Issue priorities & positions','Messaging & communications feedback','Likelihood to vote & support','Volunteer & grassroots feedback','Website & digital experience'],'descs'=>['Tracks favorability, trust, and support intensity','Tells you what to emphasize in messaging and which policies to feature','Guides spend and channel mix; tests slogans and creative before scaling','Helps segment into supporters, persuadables, and targets for GOTV','Improves events and field operations; surfaces friction for activists','Directly improves the site clarity and conversion paths'],'cond'=>'cond-survey-focuses'],
 ]],
 /* ── Step 15 — Summary & Acknowledgment ── */
-['id'=>'q15','section'=>'15 — Summary & Acknowledgment','question'=>'Review and submit','subtitle'=>'Review the details below, confirm your package, and generate your candidate profile.','fields'=>[
+['id'=>'q15','section'=>'15 — Summary & Acknowledgment','question'=>'Review and submit','subtitle'=>'Review the details below, confirm your package, and generate your candidate profile.</p><div id="atpSumContent" style="text-align:left;margin:20px 0"></div><p style="display:none">','fields'=>[
     ['id'=>'scope_acknowledgment','label'=>'I understand the above represents my Standard website package. Additional pages and services will be discussed separately.','type'=>'checkbox','placeholder'=>'','optional'=>false,'options'=>['I acknowledge']],
     ['id'=>'compliance_acknowledgment','label'=>'I have reviewed the compliance guide for my filing jurisdiction.','type'=>'checkbox','placeholder'=>'','optional'=>false,'options'=>['I acknowledge']],
 ]],
@@ -738,7 +738,29 @@ function ca(){
   sv();
 }
 
-window.AG=function(n){ca();cur=n;
+function buildSummary(){
+  var h='';var ss='color:rgba(255,255,255,.5);font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin:20px 0 8px';
+  var ps=['Home','About','Issues','Sign-Up','Donate','Contact','Privacy Policy','Cookie-Tracking-SMS Compliance Policy'];
+  if(D.survey_page_wanted&&D.survey_page_wanted.indexOf('Yes')===0)ps.push('Survey');
+  h+='<div style="'+ss+'">Your Standard Campaign Website includes:</div>';
+  h+='<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px">';
+  ps.forEach(function(p){h+='<span style="background:rgba(255,255,255,.08);padding:4px 10px;border-radius:3px;font-size:12px;color:rgba(255,255,255,.7)">'+p+'</span>';});
+  h+='</div>';
+  var conds=[];
+  if(D.endorsements_about)conds.push('Your endorsements will appear on your About page.');
+  if(D.video_main)conds.push('Your campaign video will be embedded on your homepage.');
+  if(D.campaign_email_needed&&D.campaign_email_needed.indexOf('Yes')===0)conds.push('A campaign email address will be set up on your domain.');
+  if(conds.length){h+='<div style="margin-bottom:16px">';conds.forEach(function(c){h+='<div style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:4px">✓ '+c+'</div>';});h+='</div>';}
+  h+='<div style="'+ss+'">Key Details</div>';
+  var kd=[['Candidate',D.display_name||D.legal_name],['Office',D.office],['District',D.district],['State',D.state],['Party',D.party],['Election Year',D.election_year],['Survey Focus',D.primary_survey_focus],['Domain',D.domain_preferred],['Launch',D.launch_timeline],['Launch Date',D.launch_date]];
+  h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;margin-bottom:16px">';
+  kd.forEach(function(r){if(r[1])h+='<div style="font-size:12px"><span style="color:rgba(255,255,255,.4)">'+r[0]+':</span> <span style="color:rgba(255,255,255,.8)">'+r[1]+'</span></div>';});
+  h+='</div>';
+  var svcs=(Array.isArray(D.additional_services)?D.additional_services:[]).concat(Array.isArray(D.tier2_pages)?D.tier2_pages:[]).concat(Array.isArray(D.additional_survey_focuses)?D.additional_survey_focuses:[]);
+  if(svcs.length){h+='<div style="'+ss+'">Additional Services of Interest</div><div style="margin-bottom:16px">';svcs.forEach(function(s){h+='<div style="font-size:12px;color:rgba(255,255,255,.6);margin-bottom:3px">• '+s+'</div>';});h+='<div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:8px">These will be discussed separately with your ATP team.</div></div>';}
+  var el=document.getElementById('atpSumContent');if(el)el.innerHTML=h;
+}
+window.AG=function(n){ca();cur=n;if(n===TOT)buildSummary();
   const p=n>TOT?100:((n-1)/TOT)*100;
   document.getElementById('atpF').style.width=p+'%';
   document.getElementById('atpSt').textContent=n>TOT?'Complete':'Step '+n+' of '+TOT;
