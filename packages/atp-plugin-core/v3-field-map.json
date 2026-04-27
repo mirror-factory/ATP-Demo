@@ -90,7 +90,7 @@
 
   "committee_name": "legal_compliance.committee_name",
   "paidfor_text": "legal_compliance.paid_for_by",
-  "filing_level": "legal_compliance.filing_level",
+  "jurisdiction": "legal_compliance.jurisdiction",
   "committee_id": "legal_compliance.committee_finance_id",
   "committee_address": "legal_compliance.committee_mailing_address",
   "campaign_phone": "legal_compliance.campaign_phone_legal",

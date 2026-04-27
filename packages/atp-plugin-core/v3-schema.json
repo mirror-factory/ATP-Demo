@@ -80,7 +80,8 @@
   "visual_branding": {
     "headshot_link": "",
     "logo_link": "",
-    "additional_photos_link": "",
+    "additional_photos_link": [],
+    "submission_folder": "",
     "primary_color": "",
     "secondary_color": "",
     "accent_color": "",
@@ -116,7 +117,7 @@
   "legal_compliance": {
     "committee_name": "",
     "paid_for_by": "",
-    "filing_level": "",
+    "jurisdiction": "",
     "committee_finance_id": "",
     "committee_mailing_address": "",
     "campaign_phone_legal": "",
