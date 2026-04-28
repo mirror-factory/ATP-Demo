@@ -1,323 +1,380 @@
-# ATP Campaign Site Plugin
+# ATP Campaign Site Platform
 
-**Version:** 3.0.0
-**Author:** Mirror Factory / ROI Amplified
-**For:** America Tracking Polls
-
-A WordPress plugin that powers Tier 1 campaign websites. One intake form collects everything about a candidate, outputs structured JSON, and drives the generation of a complete campaign site — homepage, issues, donate, contact, legal compliance pages, and more.
+**Version:** 3.1.0
+**By:** Mirror Factory / ROI Amplified
+**For:** America Tracking Polls (ATP)
 
 ---
 
-## How It Works
+## What This Is
+
+A WordPress plugin system that generates complete campaign websites from a structured intake form. ATP staff fill out a 16-step form about a political candidate, the form produces a V3 JSON file, and that JSON drives the generation of a 7-page campaign website — homepage, issues, donate, contact, about, privacy policy, and cookie/SMS compliance policy.
+
+The system is built as a monorepo that manages multiple client sites from one codebase. Each client gets a self-contained WordPress plugin that can run independently.
+
+---
+
+## The Parties
+
+| Who | Role |
+|-----|------|
+| **America Tracking Polls (ATP)** | The political services company. Sells campaign websites + services to candidates. |
+| **Mirror Factory** | The vendor. Builds and maintains the websites using this system. |
+| **Candidate** | The end client. Gets a campaign website. Interacts with ATP, not Mirror Factory. |
+
+---
+
+## The Flow
 
 ```
-Candidate fills 16-step intake form
+ATP staff talks to candidate
         ↓
-Form outputs V3 JSON (nested, structured)
+ATP fills out 16-step intake form (internal tool on ATP's WordPress)
         ↓
-AI takes the JSON + prompt template → generates Page JSON
+Form saves to ATP's database + uploads assets to Google Drive
         ↓
-Page JSON imported into WordPress → each shortcode gets custom HTML
+ATP clicks "Submit to Mirror Factory"
         ↓
-Campaign website is live (7+ pages)
+Mirror Factory receives:
+  - Email notification with candidate summary
+  - V3 JSON file (all candidate data)
+  - Drive folder with headshot, logo, photos
+  - Invoice sent to ATP for first half payment
+        ↓
+Mirror Factory runs JSON through AI generation prompt
+        ↓
+AI generates Page JSON (HTML for each shortcode section)
+        ↓
+Mirror Factory deploys to SiteGround:
+  - Installs WordPress
+  - Installs ATP Campaign Site plugin (built from monorepo)
+  - Imports Page JSON into shortcodes
+  - Imports media from Drive into WP media library
+  - Configures domain, SSL, white label
+        ↓
+ATP receives staging link
+ATP reviews with candidate
+Candidate sends consolidated feedback doc
+        ↓
+Mirror Factory applies edits
+        ↓
+ATP approves → site goes live
+Invoice sent for second half payment
 ```
 
 ---
 
-## The Intake Form
+## Repository Structure
 
-**16 steps. ~100 fields. Three-condition branching (A/B/C).**
+```
+ATP-Demo/                           ← this repo (mirror-factory/ATP-Demo)
+├── packages/
+│   └── atp-plugin-core/            ← shared plugin code (ONE codebase)
+│       ├── atp-demo-plugin.php     ← main plugin file
+│       ├── includes/
+│       │   ├── registry.php        ← page templates (shortcode defaults)
+│       │   ├── shortcodes.php      ← shortcode rendering engine
+│       │   ├── admin.php           ← shortcode editor admin page
+│       │   ├── importer.php        ← one-click page creator
+│       │   ├── candidate-page.php  ← Page JSON import engine
+│       │   ├── whitelabel.php      ← custom login, admin bar, dashboard
+│       │   ├── site-config.php     ← reads client config on activation
+│       │   ├── file-upload.php     ← file upload (WP media / Google Drive)
+│       │   ├── setup-wizard.php    ← first-run onboarding
+│       │   ├── changelog.php       ← version history viewer
+│       │   ├── updater.php         ← GitHub auto-updater
+│       │   └── intake/
+│       │       └── atp-candidate-intake.php  ← the 16-step intake form
+│       ├── v3-schema.json          ← the JSON contract
+│       ├── v3-field-map.json       ← form field ID → JSON path mapping
+│       ├── PROMPT-TEMPLATE.md      ← AI generation prompt
+│       └── assets/                 ← logos, admin CSS
+│
+├── sites/
+│   └── john-stacy/                 ← CLIENT: John Stacy
+│       ├── site-config.json        ← client name, colors, domain, pages
+│       ├── intake-v3.json          ← completed intake data
+│       └── page-overrides/         ← custom shortcode HTML (optional)
+│
+├── scripts/
+│   ├── new-site.sh                 ← scaffold a new client site
+│   └── build-site.sh              ← assemble deployable plugin for a client
+│
+├── docs/                           ← detailed documentation
+│   ├── intake-form.md              ← intake form spec + field reference
+│   ├── json-schema.md              ← V3 JSON schema reference
+│   ├── pages.md                    ← page-by-page breakdown
+│   ├── deployment.md               ← deployment guide
+│   └── editing.md                  ← how to make changes post-launch
+│
+├── .github/workflows/
+│   └── build-and-release.yml       ← auto-build client plugins on tag
+│
+└── playground-blueprint.json       ← WordPress Playground demo
+```
 
-The intake form (`[atp_intake]`) is the foundation of everything. It collects candidate identity, bio, issues, branding, legal compliance, fundraising, domain, and timeline — then outputs a V3 JSON file that drives every downstream system.
-
-### V3 Form Steps
-
-| Step | Section | What It Collects |
-|------|---------|-----------------|
-| 1/16 | 00 — Source Check | Submitter info, filing URL, Ballotpedia URL, existing website |
-| 2/16 | 01 — Identity & Race | Legal name, display name, ballot name, office, district, state, party, election date/type, incumbent status |
-| 3/16 | 02 — Campaign Contact | Primary contact, campaign manager, treasurer (name, email, phone, address) |
-| 4/16 | 03 — Bio & Messaging | Ballotpedia status, homepage intro, full bio, why running, tagline, key messages, endorsements for about page |
-| 5/16 | 04 — Platform & Issues | 15 issue category checkboxes + positions per issue, opponent gaps, evolved positions |
-| 6/16 | 05 — Background | Profession, role, experience, education (3 slots), military service |
-| 7/16 | 06 — Visual Branding | Headshot (required), logo, photos, 3 brand colors, visual style, design notes |
-| 8/16 | 07 — Social Media | Facebook, X/Twitter, Instagram, YouTube, TikTok, LinkedIn, Other |
-| 9/16 | 08 — Video | Main campaign video URL, other video assets |
-| 10/16 | 09 — Survey Page | Include survey? Primary focus (6 categories), page name, placement, intro text |
-| 11/16 | 10 — Legal & Compliance | Committee name, paid-for-by, filing level, privacy contacts, cookies, SMS categories, analytics, data sharing |
-| 12/16 | 11 — Fundraising | Donation page needed? Platform, platform status, URL, embed code, button label, text-to-donate |
-| 13/16 | 12 — Domain Setup | Domain status (5 options), preferred/primary domain, registrar, hosting, campaign email |
-| 14/16 | 13 — Approval & Timeline | Content approver, copy help, launch timeline/date, communication pref, referral source |
-| 15/16 | 14 — Additional Services | 11 campaign services, 6 Tier 2 page upgrades, additional survey focuses |
-| 16/16 | 15 — Summary | Tier 1 pages list, key details review, scope + compliance acknowledgment |
-
-### V3 JSON Output
-
-On submit, the form produces a nested JSON file following `v3-schema.json`. Key sections:
-
-- `meta` — form version, candidate ID, timestamp, status
-- `source_check` — submitter info and data source URLs
-- `identity` — candidate identity and race details
-- `contacts` — primary contact, campaign manager, treasurer
-- `bio_messaging` — bio, tagline, key messages, endorsements
-- `platform_issues` — issue categories array + position text
-- `background` — profession, education, military
-- `visual_branding` — headshot, logo, colors, style
-- `social_media` — all platform URLs
-- `video` — campaign video URLs
-- `survey` — survey page config and focus
-- `legal_compliance` — committee, disclaimers, SMS, cookies, analytics
-- `fundraising` — platform, status, URLs, embed code
-- `domain_setup` — domain, registrar, hosting, email
-- `approval_timeline` — approver, timeline, referral
-- `additional_services` — upsell interest signals
-- `acknowledgment` — scope and compliance checkboxes
-- `pages_standard` — Tier 1 page list
-
-### Field Mapping
-
-`v3-field-map.json` maps every form field ID to its V3 schema path. Example:
-- `filler_name` → `source_check.submitter_name`
-- `committee_name` → `legal_compliance.committee_name`
-- `issue_categories` → `platform_issues.issue_categories`
+### Separate Repo: ATP Website
+```
+CrazySwami/atp-website              ← ATP's own marketing site
+├── atp-website-plugin/             ← plugin for americatrackingpolls.com
+│   ├── includes/
+│   │   └── intake/                 ← intake form (same form, different context)
+│   └── ...
+└── ...
+```
 
 ---
 
-## Campaign Website Pages
+## The 7 Pages
 
-### Tier 1 Standard Pages (built automatically)
+### Page 1: Home
 
-| Page | Shortcodes Used | Purpose |
-|------|----------------|---------|
-| **Home** | `atp_cand_styles` + `nav` + `hero` + `stats` + `about` + `messages` + `issues` + `endorsements` + `video` + `volunteer` + `survey` + `donate` + `social` + `footer` | Full campaign landing page with 14 sections |
-| **Issues & Answers** | `atp_cand_styles` + `nav` + `issues_page` + `footer` | Detailed policy positions — 5 issue cards with navy headers |
-| **Donate** | `atp_cand_styles` + `nav` + `donate_page` + `footer` | Embedded donation form (Anedot/ActBlue/WinRed iframe) + mail-in info |
-| **Contact** | `atp_cand_styles` + `nav` + `contact` + `footer` | Phone, email, office address, Calendly embed, social links |
-| **Privacy Policy** | `atp_cand_styles` + `nav` + `privacy` + `footer` | 13-section policy with SMS/10DLC/TCPA disclosures |
-| **Cookie & SMS Policy** | `atp_cand_styles` + `nav` + `cookies` + `footer` | 9-section cookie/tracking/TCPA/10DLC compliance policy |
-| **Sign-Up** | *(built from survey/Typeform embed)* | Voter engagement survey — configured in intake Step 9 |
+The main campaign landing page. 14 shortcode sections.
 
-### Homepage Sections (14 shortcodes)
+| Section | Shortcode | JSON Source |
+|---------|-----------|-------------|
+| CSS + GSAP | `atp_cand_styles` | `visual_branding.primary_color`, `visual_branding.secondary_color`, `visual_branding.accent_color` |
+| Navigation | `atp_cand_nav` | `identity.display_name`, `identity.office_sought` |
+| Hero | `atp_cand_hero` | `identity.party`, `identity.district`, `identity.state`, `bio_messaging.tagline`, `bio_messaging.homepage_intro`, `visual_branding.headshot_link` |
+| Stats Bar | `atp_cand_stats` | Derived from `background.*` and `bio_messaging.*` by AI |
+| About | `atp_cand_about` | `bio_messaging.full_bio`, `bio_messaging.why_running`, `background.*` (profession, education, military), `bio_messaging.endorsements_list` |
+| Key Messages | `atp_cand_messages` | `bio_messaging.key_messages` |
+| Issues | `atp_cand_issues` | `platform_issues.issue_categories`, `platform_issues.positions` |
+| Endorsements | `atp_cand_endorsements` | `bio_messaging.endorsements_list` |
+| Video | `atp_cand_video` | `video.main_video_url` |
+| Get Involved | `atp_cand_volunteer` | `identity.display_name` (standard template) |
+| Survey | `atp_cand_survey` | `survey.existing_survey_link` |
+| Donate CTA | `atp_cand_donate` | `fundraising.donation_page_url`, `fundraising.button_label` |
+| Social | `atp_cand_social` | `social_media.*` (only platforms with URLs) |
+| Footer | `atp_cand_footer` | `legal_compliance.paid_for_by`, `legal_compliance.committee_mailing_address` |
 
-| Shortcode | Section | Key Features |
-|-----------|---------|-------------|
-| `atp_cand_styles` | CSS + GSAP | Full design system, CSS variables, scroll animations |
-| `atp_cand_nav` | Navigation | Sticky nav, scroll progress bar, mobile menu, donate CTA |
-| `atp_cand_hero` | Hero | Ken Burns background, 56px title, dual CTAs, headshot photo |
-| `atp_cand_stats` | Metrics Bar | 4 key stats with staggered fade-in animation on scroll |
-| `atp_cand_about` | About | Multi-paragraph bio + credentials sidebar (6 cards) |
-| `atp_cand_messages` | Key Messages | 3 numbered commitment cards |
-| `atp_cand_issues` | Issues Grid | Centered 3-column grid, 5 issue cards + "Trusted by Leaders" |
-| `atp_cand_endorsements` | Endorsements | Quote cards with names, roles, organizations |
-| `atp_cand_video` | Video | HTML5 video player with play/pause overlay |
-| `atp_cand_volunteer` | Get Involved | Navy background with flag stripes, 3 glassmorphic action cards |
-| `atp_cand_survey` | Voter Survey | Typeform iframe embed |
-| `atp_cand_donate` | Donate CTA | Full-width dark section with white donate button |
-| `atp_cand_social` | Social | Icon-only circles (FB, X, IG, LI) + signature |
-| `atp_cand_footer` | Footer | Paid-for-by disclaimer, committee info, compliance links, scroll progress JS |
+### Page 2: Issues & Answers
+
+Detailed policy positions. One shortcode: `atp_cand_issues_page`.
+
+| JSON Source | What It Generates |
+|-------------|-------------------|
+| `platform_issues.issue_categories` | One card per selected issue (up to 5) |
+| `platform_issues.positions` | Full position text per issue |
+| `bio_messaging.differentiator` | Intro paragraph |
+
+### Page 3: Donate
+
+Embedded donation form. One shortcode: `atp_cand_donate_page`.
+
+| JSON Source | What It Generates |
+|-------------|-------------------|
+| `fundraising.donation_page_url` | Donate button link |
+| `fundraising.embed_code` | Inline donation form iframe |
+| `fundraising.button_label` | Button text |
+| `identity.display_name` | Page title |
+| `legal_compliance.committee_mailing_address` | Mail-in check address |
+
+### Page 4: Contact
+
+Contact information + scheduling. One shortcode: `atp_cand_contact`.
+
+| JSON Source | What It Generates |
+|-------------|-------------------|
+| `legal_compliance.campaign_phone_legal` | Phone card |
+| `legal_compliance.campaign_email_legal` | Email card |
+| `legal_compliance.committee_mailing_address` | Office address card |
+| `social_media.*` | Social media links |
+| Calendly URL (from candidate) | Embedded scheduling |
+
+### Page 5: About
+
+Currently part of the homepage (`atp_cand_about` section). Can be made standalone.
+
+| JSON Source | What It Generates |
+|-------------|-------------------|
+| `bio_messaging.full_bio` | Multi-paragraph biography |
+| `bio_messaging.why_running` | Why running section |
+| `background.*` | Credentials sidebar |
+| `bio_messaging.endorsements_list` | Endorsements on about page |
+
+### Page 6: Privacy Policy
+
+13-section legal page. One shortcode: `atp_cand_privacy`.
+
+| JSON Source | What It Generates |
+|-------------|-------------------|
+| `legal_compliance.committee_name` | [Candidate Committee Name] |
+| `legal_compliance.committee_mailing_address` | [Mailing Address] |
+| `legal_compliance.campaign_email_legal` | [Campaign Email Address] |
+| `legal_compliance.campaign_phone_legal` | [Campaign Phone Number] |
+| `domain_setup.preferred_domain` | [Website URL] |
+
+### Page 7: Cookie, Tracking & SMS Compliance Policy
+
+9-section legal page. One shortcode: `atp_cand_cookies`.
+
+| JSON Source | What It Generates |
+|-------------|-------------------|
+| `identity.display_name` | [Candidate Name] |
+| `identity.office_sought` | [Office] |
+| `legal_compliance.committee_name` | [Candidate Committee Name] |
+| `legal_compliance.committee_mailing_address` | [Mailing Address] |
+| `legal_compliance.campaign_email_legal` | [Campaign Email Address] |
+| `legal_compliance.campaign_phone_legal` | [Campaign Phone Number] |
+| `domain_setup.preferred_domain` | [Website URL] |
+
+---
+
+## The Intake Form (V3)
+
+### Overview
+
+16-step guided form. ATP staff fills it out after talking to the candidate. Produces a V3 JSON file that contains everything needed to generate the website.
+
+### Steps
+
+| Step | Section | Key Fields |
+|------|---------|-----------|
+| 1/16 | Source Check | Who's filling this out, filing URL, Ballotpedia URL |
+| 2/16 | Identity & Race | Legal name, display name, office, district, state, party, election date |
+| 3/16 | Campaign Contact | Primary contact, campaign manager, treasurer (name/email/phone) |
+| 4/16 | Bio & Messaging | Homepage intro, full bio, why running, tagline, key messages, endorsements |
+| 5/16 | Platform & Issues | Up to 5 issue categories with positions |
+| 6/16 | Background | Profession, education (3 slots), military service |
+| 7/16 | Visual Branding | Headshot upload, logo upload, photos, brand colors, visual style |
+| 8/16 | Social Media | Facebook, X, Instagram, YouTube, TikTok, LinkedIn |
+| 9/16 | Video | Campaign video URL |
+| 10/16 | Survey Page | Include survey? Focus category, page name, placement |
+| 11/16 | Legal & Compliance | Committee name, paid-for-by, jurisdiction, privacy contacts, SMS categories |
+| 12/16 | Fundraising | Platform, status, donation URL, embed code, button label |
+| 13/16 | Domain Setup | Domain status, preferred domain, hosting, campaign email |
+| 14/16 | Approval & Timeline | Content approver, launch timeline, communication preference |
+| 15/16 | Grow Beyond Your Website | Additional services interest, Tier 2 pages, survey upsells |
+| 16/16 | Summary & Acknowledgment | Review all data, confirm scope, generate profile |
+
+### Output
+
+The form outputs a nested V3 JSON with 17 sections. See `v3-schema.json` for the complete empty schema and `v3-field-map.json` for the mapping between form field IDs and JSON paths.
+
+---
+
+## The JSON-to-Site Pipeline
+
+### How the JSON becomes a website
+
+1. **Intake form produces V3 JSON** — all candidate data in one structured file
+2. **AI reads the JSON + prompt template** — `PROMPT-TEMPLATE.md` tells the AI how to generate HTML for each shortcode section
+3. **AI outputs Page JSON** — each key is a shortcode tag, each value is production HTML
+4. **Page JSON imported into WordPress** — ATP Shortcodes → Candidate Page → paste → import
+5. **Legal pages auto-populated** — privacy and cookie policy templates have `[bracket]` variables replaced from `legal_compliance.*`
+6. **Media imported from Drive** — headshot, logo, photos downloaded into WP media library
+7. **Site renders** — each page is a list of shortcode tags, each shortcode renders its HTML from the database
+
+### What's automatic vs manual
+
+| Step | Automatic | Manual |
+|------|-----------|--------|
+| JSON generation from form | Yes | — |
+| File upload to Drive/WP | Yes | — |
+| AI page generation | Could be automated | Currently: paste JSON into prompt |
+| Page JSON import | One-click in admin | — |
+| Legal page variable replacement | In the prompt | — |
+| Domain + SSL setup | — | SiteGround admin |
+| White label branding | Auto from site-config.json | — |
 
 ---
 
 ## Plugin Features
 
-### Shortcode Editor
-Every section of every page is an independently editable shortcode. Go to **ATP Shortcodes** in the admin sidebar to see all shortcodes, copy their HTML, edit it, paste it back. The registry provides defaults; any edits are stored in the WP database and take priority. Plugin updates never overwrite your edits.
-
-### Page Importer
-**ATP Shortcodes → Import Pages** — One-click page creation for all 7 client pages. Each page gets:
-- Canvas template (works with or without Elementor)
-- Yoast SEO focus keyword and meta description
-- Title hidden via post meta
-
-### Candidate Page Engine
-**ATP Shortcodes → Candidate Page** — Two modes:
-1. **Page JSON Import** (primary): Paste AI-generated Page JSON where each key is a shortcode tag and each value is final HTML. Full creative control.
-2. **Intake Data Fallback**: Link to an intake submission or paste raw JSON for automatic token replacement.
-
-### White Label
-**ATP Shortcodes → White Label** — Customize the admin for each client:
-- Client name and logo on login page
-- Brand colors on admin bar and menus
-- Custom login background image
-- Dashboard welcome widget with quick links
-- Custom admin footer text
-
-### Setup Wizard
-**ATP Shortcodes → Setup Wizard** — First-run onboarding with plugin installation and page import. Always accessible in the menu with a "Restart" button.
-
-### Changelog
-**ATP Shortcodes → Changelog** — Renders CHANGELOG.md with styled formatting.
-
-### Auto-Updater
-GitHub-based plugin updates. Checks for new releases automatically.
-
-### Intake Form Admin
-**ATP Candidates** — View all submissions, export JSON, send email notifications.
-**ATP Candidates → Settings** — Edit questions, customize branding, configure notification recipients.
+| Feature | What It Does |
+|---------|-------------|
+| **Shortcode Editor** | Edit any section's HTML in the admin. Database edits override plugin defaults. |
+| **Page Importer** | One-click creation of all 7 pages with Canvas template and SEO metadata. |
+| **Candidate Page Engine** | Import Page JSON from AI. Each key populates a shortcode. |
+| **White Label** | Custom login page, admin bar, dashboard, footer — all from settings. |
+| **File Upload** | Native drag-and-drop upload. WordPress media (default) or Google Drive. |
+| **Setup Wizard** | First-run onboarding. Restartable from admin menu. |
+| **Auto-Updater** | Checks GitHub for new releases, updates plugin automatically. |
+| **Site Config** | `site-config.json` auto-applies client branding on activation. |
 
 ---
 
-## Key Files
+## Monorepo Operations
 
-| File | Purpose |
-|------|---------|
-| `v3-schema.json` | The V3 JSON schema — the contract between the form and all downstream systems |
-| `v3-field-map.json` | Maps form field IDs to V3 schema paths |
-| `example-intake.json` | Complete example intake output (John Stacy) |
-| `example-page.json` | Complete example Page JSON (generated HTML per shortcode) |
-| `PROMPT-TEMPLATE.md` | AI prompt template for generating Page JSON from intake JSON |
-| `CHANGELOG.md` | Version history |
-| `playground-blueprint.json` | WordPress Playground blueprint — instant demo environment |
+### Add a new client
+
+```bash
+./scripts/new-site.sh client-slug "Client Name" "Office Tagline"
+# Edit sites/client-slug/site-config.json
+# Save intake JSON to sites/client-slug/intake-v3.json
+```
+
+### Build a client's plugin
+
+```bash
+./scripts/build-site.sh client-slug
+# Output: dist/client-slug/atp-campaign-site/
+# Zip and deploy to their WordPress
+```
+
+### Update all clients
+
+Edit `packages/atp-plugin-core/` → commit → tag → GitHub Action builds all client plugins.
+
+### Give a client their site
+
+Zip `dist/client-slug/atp-campaign-site/` — it's a self-contained WordPress plugin. No dependency on the monorepo, Mirror Factory, or ATP.
 
 ---
 
-## Downstream System Mapping
+## Post-Launch Editing
 
-The V3 JSON feeds multiple systems beyond the website:
-
-| System | JSON Sections Used |
-|--------|-------------------|
-| **Website Build** | All sections (primary consumer) |
-| **HubSpot CRM** | source_check, identity, contacts, approval_timeline, additional_services |
-| **Campaign Verify** | identity, contacts, legal_compliance |
-| **10DLC Registration** | identity, legal_compliance, fundraising, contacts |
-| **Wikidata** | identity, source_check, social_media, domain_setup |
-| **Schema Markup / JSON-LD** | identity, social_media, source_check, domain_setup |
-| **Privacy Policy (auto-gen)** | legal_compliance (committee, privacy contacts, vendors) |
-| **Cookie/SMS Policy (auto-gen)** | legal_compliance (cookies, SMS, analytics) |
-| **Legal Footer** | legal_compliance.paid_for_by |
-| **Billing Form** | contacts (treasurer), legal_compliance, fundraising |
-
----
-
-## WordPress Playground
-
-Instant demo with everything pre-installed:
-
-```
-https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/mirror-factory/ATP-Demo/claude/tier1-intake-form-uq7Mc/playground-blueprint.json
-```
-
-Creates 7 pages with Canvas template, sets homepage, logs in as admin.
-
----
-
-## Development Workflow
-
-1. **New client**: Fork the repo → update shortcode defaults with client content → deploy
-2. **Content updates**: Edit shortcodes in the admin UI or push registry changes via GitHub
-3. **Feature additions**: Add to the master repo, cherry-pick into client forks
-4. **Safe updates**: Registry defaults are fallbacks; database edits always take priority
-
----
-
-## Quick Start — New Client Site
-
-### Step 1: Get the intake JSON
-
-The candidate (or their campaign manager) fills out the 16-step intake form. When they click "Generate Profile," the form outputs a V3 JSON file. Download it or copy it from the admin.
-
-### Step 2: Generate the Page JSON
-
-Take the intake JSON and run it through this prompt in Claude, ChatGPT, or any AI:
-
-```
-You are a political campaign web designer. I'm giving you a candidate's
-intake form data as JSON. Generate a Page JSON that contains the final
-rendered HTML for each shortcode section of their campaign website.
-
-Rules:
-1. Output valid JSON with these keys: atp_cand_nav, atp_cand_hero,
-   atp_cand_stats, atp_cand_about, atp_cand_messages, atp_cand_issues,
-   atp_cand_endorsements, atp_cand_video, atp_cand_volunteer,
-   atp_cand_survey, atp_cand_donate, atp_cand_social, atp_cand_footer
-2. You MAY omit keys for sections that don't apply
-3. Each value is a string of HTML using the CSS classes from atp_cand_styles
-4. Include _candidate and _generated metadata fields
-5. HTML should be production-ready with real content, no placeholders
-6. Generate the right number of issue cards from platform_issues
-7. Generate endorsement cards from bio_messaging.endorsements_list
-8. Only include social links that have URLs
-9. Footer MUST include the exact legal_compliance.paid_for_by text
-10. Use identity fields for the nav bar (display_name, office_sought)
-11. Use bio_messaging.homepage_intro for the hero intro paragraph
-12. Use bio_messaging.tagline for the hero H1
-
-Candidate Intake JSON:
-
-{PASTE THE V3 JSON HERE}
-```
-
-The AI reads the structured data and writes production HTML for each section.
-
-### Step 3: Generate the legal pages
-
-Run a second prompt for the privacy and cookie policies:
-
-```
-I need you to populate two legal page templates with this candidate's data.
-Use the legal_compliance section of the JSON to fill in all [bracketed]
-variables. Output two separate HTML blocks.
-
-Template 1: Privacy Policy — use the atp_cand_privacy shortcode template
-Template 2: Cookie, Tracking & SMS Compliance Policy — use the atp_cand_cookies template
-
-Variables to replace:
-- [Candidate Committee Name] = legal_compliance.committee_name
-- [Website URL] = domain_setup.preferred_domain
-- [Mailing Address] = legal_compliance.committee_mailing_address
-- [Campaign Email Address] = legal_compliance.campaign_email_legal
-- [Campaign Phone Number] = legal_compliance.campaign_phone_legal
-- [Month Day, Year] = today's date
-- [Candidate Name] = identity.display_name
-- [Office] = identity.office_sought
-
-Candidate JSON:
-
-{PASTE THE V3 JSON HERE}
-```
-
-### Step 4: Import into WordPress
-
-1. Go to **WP Admin → ATP Shortcodes → Candidate Page**
-2. Paste the Page JSON from Step 2
-3. Click **Import Page JSON**
-4. Go to **ATP Shortcodes** → find `atp_cand_privacy` and `atp_cand_cookies`
-5. Paste the legal page HTML from Step 3 into each shortcode editor
-6. Click Save on each
-
-### Step 5: Create the pages
-
-Go to **ATP Shortcodes → Import Pages** and import all 7 pages. Or run the Setup Wizard.
-
-### Step 6: Review and launch
-
-- Preview each page on the front end
-- Edit any shortcode in the admin if something needs tweaking
-- Set up the domain (DNS, SSL)
-- Go live
-
-### How edits work after launch
+### How edits work
 
 The shortcode system has two layers:
 
-1. **Registry defaults** — the template HTML hardcoded in the plugin
-2. **Database edits** — any changes made in the shortcode editor
+1. **Registry defaults** — template HTML in `registry.php`
+2. **Database edits** — changes made in the shortcode editor
 
-Database edits always win. So when you import Page JSON or edit a shortcode manually, that content is stored in the WordPress database and renders on the front end. Plugin updates only change the registry defaults (the fallback), never the database content.
+Database always wins. Plugin updates change defaults, never database content. "Reset" button reverts to the latest default.
 
-To update content:
-- **Quick edit**: Go to ATP Shortcodes, find the section, edit the HTML directly
-- **AI-assisted edit**: Copy the HTML, paste into AI with instructions ("make the hero title bigger", "add a new issue card"), paste back, save
-- **Full regeneration**: Run the Page JSON prompt again with updated intake data, re-import
+### Edit workflow
 
-To add a new section:
-- Add a new shortcode entry in the registry (or just edit the WordPress page content to include a custom HTML block)
+1. ATP meets with candidate, collects feedback
+2. ATP sends consolidated document to Mirror Factory (screenshots + edit descriptions)
+3. Mirror Factory edits shortcodes in admin or re-generates via AI
+4. Changes go live immediately
 
-To remove a section:
-- Edit the WordPress page and remove that shortcode tag
+### Scope tracking
+
+Edits within the 7-page Standard package are included. Additional pages, features, or services are quoted separately. The intake form's "Grow Beyond Your Website" section captures interest signals for upsells.
 
 ---
 
-*ATP Campaign Site Plugin v3.0.0*
-*Built by Mirror Factory / ROI Amplified for America Tracking Polls*
+## Key Files Reference
+
+| File | Purpose |
+|------|---------|
+| `v3-schema.json` | The JSON contract — every field the form outputs |
+| `v3-field-map.json` | Maps form field IDs to JSON paths |
+| `PROMPT-TEMPLATE.md` | AI prompt for generating Page JSON |
+| `example-intake.json` | Example completed intake (John Stacy) |
+| `example-page.json` | Example Page JSON output |
+| `site-config.json` | Per-client configuration |
+| `playground-blueprint.json` | WordPress Playground instant demo |
+
+---
+
+## Pricing Model
+
+| Milestone | Payment |
+|-----------|---------|
+| Intake form completed + submitted to Mirror Factory | First half invoice sent |
+| Site approved + launched | Second half invoice sent |
+
+Additional services (text messaging, polling, ads, Tier 2 pages) quoted separately per ATP's service catalog.
+
+---
+
+See `/docs/` for detailed documentation:
+- `docs/intake-form.md` — complete field reference
+- `docs/json-schema.md` — V3 JSON schema specification
+- `docs/pages.md` — page-by-page breakdown with all shortcodes
+- `docs/deployment.md` — SiteGround deployment guide
+- `docs/editing.md` — post-launch editing workflows
