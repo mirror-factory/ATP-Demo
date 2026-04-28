@@ -289,21 +289,20 @@ HTML,
       <span class="cand-nav-badge">County Commissioner</span>
     </div>
     <div class="cand-nav-links">
-      <a href="#about" class="cand-nav-link">About</a>
-      <a href="#issues" class="cand-nav-link">Issues</a>
-      <a href="#endorsements" class="cand-nav-link">Endorsements</a>
-      <a href="#involved" class="cand-nav-link">Get Involved</a>
-      <a href="https://secure.anedot.com/stacy-for-commissioner/donate" class="cand-nav-cta" target="_blank" rel="noopener">Donate</a>
+      <a href="/about/" class="cand-nav-link">About</a>
+      <a href="/issues/" class="cand-nav-link">Issues</a>
+      <a href="/contact/" class="cand-nav-link">Contact</a>
+      <a href="/donate/" class="cand-nav-cta">Donate</a>
     </div>
     <button class="cand-nav-toggle" aria-label="Menu" onclick="document.getElementById('cand-mobile-menu').classList.toggle('open')">
       <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
     <div class="cand-nav-mobile" id="cand-mobile-menu">
-      <a href="#about">About</a>
-      <a href="#issues">Issues</a>
-      <a href="#endorsements">Endorsements</a>
-      <a href="#involved">Get Involved</a>
-      <a href="https://secure.anedot.com/stacy-for-commissioner/donate" target="_blank" rel="noopener">Donate</a>
+      <a href="/">Home</a>
+      <a href="/about/">About</a>
+      <a href="/issues/">Issues</a>
+      <a href="/donate/">Donate</a>
+      <a href="/contact/">Contact</a>
     </div>
   </div>
 </nav>

@@ -101,6 +101,19 @@ function atp_importer_page_sets() {
             'focus_kw'    => 'donate john stacy commissioner',
             'meta_desc'   => 'Support John Stacy for Rockwall County Commissioner Precinct 4. Donate online securely.',
         ],
+        'candidate-about' => [
+            'title'       => 'About',
+            'desc'        => 'Standalone about page with full candidate biography, credentials, and background.',
+            'color'       => '#0B1C33',
+            'shortcodes'  => [
+                '[atp_cand_styles]',
+                '[atp_cand_nav]',
+                '[atp_cand_about]',
+                '[atp_cand_footer]',
+            ],
+            'focus_kw'    => 'about john stacy commissioner rockwall',
+            'meta_desc'   => 'About Commissioner John Stacy — biography, credentials, education, community service, and awards.',
+        ],
         'candidate-contact' => [
             'title'       => 'Contact',
             'desc'        => 'Contact page with phone, email, office address, Calendly scheduling, and social links.',
